@@ -7,22 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <MobileCoreServices/MobileCoreServices.h>
-#import <AssetsLibrary/AssetsLibrary.h>
-#import <AVFoundation/AVFoundation.h>
 #import "SideOptionViewController.h"
 #import "ProductViewController.h"
 #import "AppDelegate.h"
-#import "MFSideMenu.h"
 #import "ChatScreen.h"
-#import "Constants.h"
-#import "AsyncImageView.h"
 
 @interface MyShopperViewController : UIViewController<UITableViewDelegate,UITableViewDataSource,UIGestureRecognizerDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate, UINavigationControllerDelegate,UIAlertViewDelegate,UIAlertViewDelegate>
 {
     AppDelegate *delegate;
     int apiAction;
-    
+    ActivityIndicatorController *activityIndicator;
+    CommonWebServices *APIservice;
+
 }
 @property (strong,nonatomic,readonly) UITableView *tableView;
 

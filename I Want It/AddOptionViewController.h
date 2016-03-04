@@ -13,6 +13,8 @@
 @interface AddOptionViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>{
     AppDelegate *delegate;
     NSMutableArray *seleImg,*unSeleImg;
+    ActivityIndicatorController *activityIndicator;
+
 }
 
 @end

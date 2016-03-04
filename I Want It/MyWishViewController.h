@@ -7,21 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "Constants.h"
-#import "MFSideMenu.h"
 #import "AppDelegate.h"
 #import "ProductViewController.h"
 #import "SideOptionViewController.h"
 #import "AvailableAppointViewController.h"
-#import "AFHTTPRequestOperationManager.h"
-#import "AFNetworking.h"
 
 @interface MyWishViewController : UIViewController<UITableViewDelegate,UITableViewDataSource,UIGestureRecognizerDelegate,UIAlertViewDelegate>{
-    
     AppDelegate *delegate;
     UIView *popUpView;
     UIButton *existBtn, *newBtn;
-    int apiAction, selectedIndex;
+    NSInteger apiAction, selectedIndex;
+    ActivityIndicatorController *activityIndicator;
+    CommonWebServices *APIservice;
 }
 
 @property (strong,retain) UITableView *tableView;

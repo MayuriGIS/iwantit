@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "0949C60C1A5C2FA8009E6666"
-               BuildableName = "I Want It.app"
+               BuildableName = "I Want It | 1.33.app"
                BlueprintName = "I Want It"
                ReferencedContainer = "container:I Want It.xcodeproj">
             </BuildableReference>
@@ -23,10 +23,10 @@
       </BuildActionEntries>
    </BuildAction>
    <TestAction
+      buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES"
-      buildConfiguration = "Debug">
+      shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
          <TestableReference
             skipped = "NO">
@@ -43,26 +43,30 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "0949C60C1A5C2FA8009E6666"
-            BuildableName = "I Want It.app"
+            BuildableName = "I Want It | 1.33.app"
             BlueprintName = "I Want It"
             ReferencedContainer = "container:I Want It.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
+      <AdditionalOptions>
+      </AdditionalOptions>
    </TestAction>
    <LaunchAction
+      buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
-      buildConfiguration = "Debug"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
+      debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <BuildableProductRunnable>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "0949C60C1A5C2FA8009E6666"
-            BuildableName = "I Want It.app"
+            BuildableName = "I Want It | 1.33.app"
             BlueprintName = "I Want It"
             ReferencedContainer = "container:I Want It.xcodeproj">
          </BuildableReference>
@@ -71,16 +75,17 @@
       </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
+      buildConfiguration = "Release"
       shouldUseLaunchSchemeArgsEnv = "YES"
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
-      buildConfiguration = "Release"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "0949C60C1A5C2FA8009E6666"
-            BuildableName = "I Want It.app"
+            BuildableName = "I Want It | 1.33.app"
             BlueprintName = "I Want It"
             ReferencedContainer = "container:I Want It.xcodeproj">
          </BuildableReference>

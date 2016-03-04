@@ -15,7 +15,6 @@
     UIButton *sideMenuBtn,*existBtn,*newBtn;
     UILabel *titleLbl;
     int selectedIndex;
-    UIActivityIndicatorView *indicatorView;
     UIView *popUpView;
 }
 
@@ -32,6 +31,13 @@
 
     delegate=(AppDelegate *)[[UIApplication sharedApplication]delegate];
     
+    activityIndicator = [[ActivityIndicatorController alloc] init];
+    [activityIndicator initWithViewController:self.navigationController];
+    
+    APIservice = [[CommonWebServices alloc] init];
+    APIservice.delegate = self;
+    APIservice.activityIndicator = activityIndicator;
+
     NSLog(@"The shopper array:%@",[delegate.dataBaseObj readShopper]);
     selectedBtnIndex = -1;
     isSearch = NO;
@@ -142,7 +148,7 @@
     }
 }
 
--(float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return 210;
 }
 
@@ -166,17 +172,17 @@
         productBackView.layer.borderWidth = 0.6f;
         [cell addSubview:productBackView];
         
-        AsyncImageView *productImg = [[AsyncImageView alloc]init];
+        UIImageView *productImg = [[UIImageView alloc]init];
         productImg.contentMode = UIViewContentModeScaleAspectFit;
         productImg.clipsToBounds = YES;
-        [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget:productImg];
         
+        /*
         if ([[prodArray objectAtIndex:indexPath.row]valueForKey:@"image"] != (id) [NSNull null] && ![[[prodArray objectAtIndex:indexPath.row]valueForKey:@"image"]  isEqual: @""]) {
             
             [productImg setImageURL:[NSURL URLWithString:[[prodArray objectAtIndex:indexPath.row]valueForKey:@"image"]]];
         }else{
             productImg.image = [UIImage imageNamed:@"shirt_ref"];
-        }
+        }*/
         
         productImg.userInteractionEnabled = YES;
         [productBackView addSubview:productImg];
@@ -312,7 +318,6 @@
         selectedBtnIndex = indexPath.row;
         [tableView reloadData];
     }else{
-//        self.view.userInteractionEnabled = NO;
        selectedIndex = indexPath.row;
         delegate.productId = [[prodArray objectAtIndex:selectedIndex]valueForKey:@"productId"];
         delegate.itemIdxId = [[prodArray objectAtIndex:selectedIndex]valueForKey:@"itemidx"];
@@ -411,14 +416,7 @@
 
 #pragma mark - Api Action
 -(void)productApi{
-    self.view.userInteractionEnabled=NO;
     delegate.proAmount = [[prodArray objectAtIndex:selectedIndex]valueForKey:@"amount"];
-    indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-    [indicatorView startAnimating];
-    [indicatorView setCenter:CGPointMake(320/2-4,320/2-1)];
-    
-    [tableView addSubview:indicatorView];
-    
     /*
      http://demoqa.ovcdemo.com:8080/POSMClient/json/process/execute/ProductSearch
      {
@@ -428,48 +426,47 @@
      "source": "external",
      "data":{"code": "479956,1992693"}
      }
-     
      */
     
-    NSMutableDictionary *userData = [NSMutableDictionary dictionaryWithObjectsAndKeys:[[prodArray objectAtIndex:selectedIndex]valueForKey:@"productId"],@"code",nil];
-    NSMutableDictionary *data = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"eCommerce",@"username",@"changeme",@"password",@"dUUID",@"deviceId",@"external",@"source",userData,@"data",nil];
-    NSString *link = @"POSMClient/json/process/execute/ProductSearch";
+    NSMutableDictionary *data = [NSMutableDictionary dictionaryWithObjectsAndKeys:[[prodArray objectAtIndex:selectedIndex]valueForKey:@"productId"],@"code",nil];
     
-    NSData *postData = [NSJSONSerialization dataWithJSONObject:data options:NSJSONWritingPrettyPrinted error:nil];
-    NSString *postLength = [NSString stringWithFormat:@"%d",(int)[postData length]];
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@" ,delegate.SER,link]]];
-    [request setHTTPMethod:@"POST"];
-    [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
-    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setHTTPBody:postData];
-    
-    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-    operation.responseSerializer = [AFJSONResponseSerializer serializer];
-    
-    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"respose:%@",responseObject);
-        NSMutableDictionary *returnDict=responseObject;
-        self.view.userInteractionEnabled=NO;
-        delegate.naviPath=@"searchView";
-        delegate.productDict = returnDict;
-        [indicatorView stopAnimating];
-        ProductViewController *prodObj=[[ProductViewController alloc]init];
-        [self.navigationController pushViewController:prodObj animated:YES];
-        self.view.userInteractionEnabled=YES;
-       
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    [activityIndicator showActivityIndicator];
+    [APIservice getProductDetailApiWithCompletionBlock:^(NSDictionary *resultDic) {
+        [activityIndicator hideActivityIndicator];
         
-        NSLog(@"Connected Failed:%@",error.localizedDescription);
-        self.view.userInteractionEnabled=YES;
-        UIAlertView *alertObj = [[UIAlertView alloc]initWithTitle:@"Alert" message:error.localizedDescription delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-        [alertObj show];
-        [indicatorView stopAnimating];
-    }];
-    
-    [operation start];
-    
+        if ([CommonWebServices isWebResponseNotEmpty:resultDic])
+        {
+            if ([resultDic isKindOfClass:[NSDictionary class]])
+            {
+                delegate.naviPath = @"wishlist";
+                delegate.productDict = [resultDic mutableCopy];
+                NSMutableArray *tempArr = [[resultDic valueForKey:@"data"]valueForKey:@"SearchObjectList"];
+                
+                if ([tempArr count] != 0) {
+                    
+                    ProductViewController *prodObj=[[ProductViewController alloc]init];
+                    [self.navigationController pushViewController:prodObj animated:YES];
+                    
+                }else{
+                    
+                    UIAlertView *alrView=[[UIAlertView alloc]initWithTitle:@"Alert" message:@"selected item details not available" delegate:self cancelButtonTitle:@"DISMISS" otherButtonTitles:nil, nil];
+                    [alrView show];
+                }
+                
+            }
+        }
+        
+    } failureBlock:^(NSError *error) {
+        [activityIndicator hideActivityIndicator];
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil
+                                                            message:[error localizedDescription]
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Ok"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+    } dataDict:data];
 
+    
 }
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar

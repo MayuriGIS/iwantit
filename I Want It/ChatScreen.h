@@ -11,7 +11,6 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <AVFoundation/AVFoundation.h>
-#import "Constants.h"
 #import "MFSideMenu.h"
 @interface ChatScreen : UIViewController<HPGrowingTextViewDelegate,UITableViewDataSource,UITableViewDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate>{
     UITableView *chatTable;

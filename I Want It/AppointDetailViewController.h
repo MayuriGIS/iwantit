@@ -9,10 +9,9 @@
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 #import "AppDelegate.h"
-#import "Constants.h"
-#import "MFSideMenu.h"
+#import "AppointmentViewController.h"
 @interface AppointDetailViewController : UIViewController<UITableViewDelegate,UITableViewDataSource,UIAlertViewDelegate>{
-    
     AppDelegate *delegate;
+    ActivityIndicatorController *activityIndicator;
 }
 @end

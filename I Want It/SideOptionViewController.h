@@ -14,6 +14,7 @@
 #import "ScanViewController.h"
 #import "SearchViewController.h"
 #import "AppDelegate.h"
+#import "iBeaconViewController.h"
 
 @interface SideOptionViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>{
     AppDelegate *delegate;

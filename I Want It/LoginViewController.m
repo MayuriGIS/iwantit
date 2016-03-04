@@ -13,7 +13,6 @@
 #import "MFSideMenu.h"
 
 @interface LoginViewController (){
-    
     UITextField *emailTxtfld,*passTxtfld,*urlTxtfld;
     UIButton    *submit;
     NSString    *trimEmail;
@@ -22,7 +21,6 @@
     UITableView *serverTable;
     NSMutableArray *serverArr;
     BOOL arrowFlag;
-    UIActivityIndicatorView *indicatorView;
 }
 
 
@@ -31,16 +29,30 @@
 @implementation LoginViewController
 - (void)viewDidLoad {
     [super viewDidLoad];
-  
+    
     if (NSFoundationVersionNumber > NSFoundationVersionNumber_iOS_6_1)
     {
         self.edgesForExtendedLayout =UIRectEdgeNone;
     }
-
     
     delegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     arrowFlag = NO;
-    serverArr = [[NSMutableArray alloc]initWithObjects:@"http://apparel.ovcdemo.com:8080/",@"http://apparelqa.ovcdemo.com:8080/",@"http://billabong.ovcdemo.com:8080/",@"http://demoqa.ovcdemo.com:8080/", nil];
+    
+    activityIndicator = [[ActivityIndicatorController alloc] init];
+    [activityIndicator initWithViewController:self.navigationController];
+    
+    APIservice = [[CommonWebServices alloc] init];
+    APIservice.delegate = self;
+    APIservice.activityIndicator = activityIndicator;
+
+    
+    serverArr = [[NSMutableArray alloc]initWithObjects:
+                 @"http://mo-ovc-test.obnubilate.co.uk:8080/",
+                 @"http://mo-ovc-demo.obnubilate.co.uk:8080/",
+                 @"http://ovc-o2.ovcdemo.com:8080/",
+                 @"http://sales.ovcdemo.com:8080/",
+                 @"http://ovctelco.ovcdemo.com:8080/",
+                 @"http://ovcapparel.ovcdemo.com:8080", nil];
     self.menuContainerViewController.panMode = MFSideMenuPanModeNone;
     self.view.backgroundColor=[UIColor colorWithRed:250.0/255.0 green:250.0/255.0 blue:250.0/255.0 alpha:1];
     
@@ -48,7 +60,6 @@
     naviLogo.frame = CGRectMake(96,0,128,40);
     naviLogo.image = [UIImage imageNamed:@"appbar_icon"];
     [self.navigationController.navigationBar addSubview:naviLogo];
-
     
     chooseLbl = [[UILabel alloc]init];
     chooseLbl.tag=10;
@@ -57,7 +68,7 @@
     chooseLbl.textColor = [UIColor blackColor];
     chooseLbl.textAlignment=NSTextAlignmentRight;
     [self.view addSubview:chooseLbl];
-
+    
     UIView *urlBackView=[[UIView alloc]init];
     urlBackView.layer.borderColor = [[UIColor colorWithRed:208.0/255.0 green:208.0/255.0 blue:208.0/255.0 alpha:1]CGColor];
     urlBackView.layer.borderWidth = 1.0f;
@@ -67,9 +78,12 @@
     urlTxtfld = [[UITextField alloc]init];
     urlTxtfld.tag=10;
     urlTxtfld.delegate=self;
-    if ([[NSUserDefaults standardUserDefaults]stringForKey:@"Servername"] != nil) {
-        urlTxtfld.text = [[NSUserDefaults standardUserDefaults]stringForKey:@"Servername"];
+    if ([[NSUserDefaults standardUserDefaults]stringForKey:@"SERVERURL"] != nil) {
+        urlTxtfld.text = [[NSUserDefaults standardUserDefaults]stringForKey:@"SERVERURL"];
+    }else{
+        urlTxtfld.text = [serverArr objectAtIndex:3];
     }
+    
     urlTxtfld.font = [UIFont fontWithName:@"OpenSans-Semibold" size:14.0];
     urlTxtfld.backgroundColor = [UIColor whiteColor];
     [urlBackView addSubview:urlTxtfld];
@@ -81,14 +95,14 @@
     dropImg.backgroundColor = [UIColor clearColor];
     [urlBackView addSubview:dropImg];
     
-
+    
     UILabel *emailLabel = [[UILabel alloc]init];
     emailLabel.text = @"Email:";
     emailLabel.font = [UIFont fontWithName:@"OpenSans-Semibold" size:14.0];
     emailLabel.textColor = [UIColor blackColor];
     emailLabel.textAlignment=NSTextAlignmentRight;
     [self.view addSubview:emailLabel];
-
+    
     
     UIView *emailBackView = [[UIView alloc]init];
     emailBackView.backgroundColor = [UIColor whiteColor];
@@ -100,7 +114,7 @@
     
     emailTxtfld = [[UITextField alloc]init];
     if ([[NSUserDefaults standardUserDefaults]stringForKey:@"userMail"] == nil) {
-        emailTxtfld.text = @"test2015@mail.com";
+        emailTxtfld.text = @"abhijit@oneviewcommerce.com";
     }else{
         emailTxtfld.text = [[NSUserDefaults standardUserDefaults]stringForKey:@"userMail"];
     }
@@ -117,9 +131,9 @@
     passLabel.text = @"Password:";
     passLabel.font = [UIFont fontWithName:@"OpenSans-Semibold" size:14.0];
     passLabel.textColor = [UIColor blackColor];
-    passLabel.textAlignment=NSTextAlignmentRight;
+    passLabel.textAlignment = NSTextAlignmentRight;
     [self.view addSubview:passLabel];
-
+    
     UIView *passBackView = [[UIView alloc]init];
     passBackView.backgroundColor = [UIColor whiteColor];
     passBackView.layer.borderColor = [[UIColor colorWithRed:208.0/255.0 green:208.0/255.0 blue:208.0/255.0 alpha:1]CGColor];
@@ -136,7 +150,7 @@
     passTxtfld.textAlignment = NSTextAlignmentRight;
     passTxtfld.backgroundColor = [UIColor clearColor];
     [passBackView addSubview:passTxtfld];
-
+    
     submit = [[UIButton alloc]init];
     submit.backgroundColor = [UIColor colorWithRed:200.0f/255.0f green:239.0f/255.0f blue:255.0f/255.0f alpha:1];
     submit.layer.cornerRadius = 5;
@@ -146,17 +160,10 @@
     [submit setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [self.view addSubview:submit];
     
-    
     UIImageView *cornerImage=[[UIImageView alloc]init];
     cornerImage.image=[UIImage imageNamed:@"IWI_logincorner"];
     cornerImage.backgroundColor=[UIColor clearColor];
     [self.view addSubview:cornerImage];
-    
-    indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-    [indicatorView setCenter:CGPointMake(320/2-5,320/2-5)];
-    [self.view addSubview:indicatorView];
-
-    
     
     //----------------Frame--------------
     
@@ -168,7 +175,7 @@
     emailLabel.frame = CGRectMake(0,chooseLbl.frame.size.height+chooseLbl.frame.origin.y+18 , 80, 30);
     emailBackView.frame = CGRectMake(85,chooseLbl.frame.size.height+chooseLbl.frame.origin.y+18, 230, 35);
     emailTxtfld.frame = CGRectMake(0, 0,225, 35);
-  
+    
     passLabel.frame = CGRectMake(0,emailLabel.frame.size.height+emailLabel.frame.origin.y+18 , 80, 30);
     passBackView.frame = CGRectMake(85,emailLabel.frame.size.height+emailLabel.frame.origin.y+18, 230, 35);
     passTxtfld.frame = CGRectMake(0, 0, 225, 35);
@@ -177,10 +184,10 @@
     
     if (IS_IPHONE4) {
         cornerImage.frame=CGRectMake(213,309 ,107, 107);
- 
+        
     }else{
         cornerImage.frame=CGRectMake(213,398 ,107, 107);
- 
+        
     }
     self.view.backgroundColor=[UIColor whiteColor];
     
@@ -191,11 +198,10 @@
 -(void)submitAction{
     [emailTxtfld resignFirstResponder];
     [passTxtfld resignFirstResponder];
-
+    
     if ([urlTxtfld.text isEqualToString:@""]) {
         UIAlertView *alertObj = [[UIAlertView alloc]initWithTitle:@"Alert" message:@"Please Select Server URL" delegate:self cancelButtonTitle:@"Retry" otherButtonTitles:nil, nil];
         [alertObj show];
-
     }else{
         if ([emailTxtfld.text isEqualToString:@""]) {
             
@@ -206,16 +212,15 @@
         }else if ([passTxtfld.text isEqualToString:@""]){
             UIAlertView *alertObj = [[UIAlertView alloc]initWithTitle:@"Alert" message:@"Please Enter your Passoword" delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles:nil, nil];
             [alertObj show];
-
+            
         }else{
             
             if ([self Emailvalidate:emailTxtfld.text]) {
                 [[NSUserDefaults standardUserDefaults]setObject:trimEmail forKey:@"userMail"];
-                [indicatorView startAnimating];
                 if (![urlTxtfld.text isEqualToString:@""] && ![urlTxtfld.text isEqualToString:@"http://"]) {
-                    delegate.SER = urlTxtfld.text;
+                    [self loginApi];
                 }
-                [self loginApi];
+                
             }else{
                 
                 UIAlertView *alertObj = [[UIAlertView alloc]initWithTitle:@"Alert" message:@"Enter a Valid Email Id" delegate:self cancelButtonTitle:@"Retry" otherButtonTitles:nil, nil];
@@ -228,10 +233,10 @@
 -(void)chooseBtnAct
 {
     if (!arrowFlag){
-
+        
         [emailTxtfld resignFirstResponder];
         [passTxtfld resignFirstResponder];
-
+        
         serverTable = [[UITableView alloc]init];
         serverTable.frame = CGRectMake(85,145, 230, 100);
         serverTable.dataSource = self;
@@ -306,7 +311,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSString *urlName = [NSString stringWithFormat:@"%@",[serverArr  objectAtIndex:indexPath.row]];
     urlTxtfld.text = urlName;
-    delegate.SER = urlName;
+    serverUrl = urlName;
     serverTable.hidden = YES;
 }
 
@@ -314,7 +319,7 @@
 {
     NSString *email_Id = tempMail;
     trimEmail = [email_Id stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-
+    
     BOOL stricterFilter = YES;
     NSString *stricterFilterString = @"[A-Z0-9a-z\\._%+-]+@([A-Za-z0-9-]+\\.)+[A-Za-z]{2,4}";
     NSString *laxString = @".+@([A-Za-z0-9]+\\.)+[A-Za-z]{2}[A-Za-z]*";
@@ -326,11 +331,9 @@
 #pragma mark - Api Action
 
 - (void) loginApi{
-    
-    self.view.userInteractionEnabled = NO;
+    [[NSUserDefaults standardUserDefaults] setObject:urlTxtfld.text forKey:SERVERNAME];
     
     /*http://demoqa.ovcdemo.com:8080/POSMClient/json/process/execute/QueryLoyaltyMembers
-     
      Request payload:
      {
      "username": "eCommerce",
@@ -341,55 +344,67 @@
      }
      */
     
-    NSMutableDictionary *userData = [NSMutableDictionary dictionaryWithObjectsAndKeys:trimEmail,@"loyaltyyId",@"suresh",@"firstName",@"kumar",@"lastName",@"sureshkumar.m@greatinnovus.com",@"email",@"demoRetailer",@"retailerId",nil];
-  
-  NSMutableDictionary *data = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"eCommerce",@"username",@"changeme",@"password",@"dUUID",@"deviceId",@"external",@"source",userData,@"data",nil];
-   
-  NSString *link=@"POSMClient/json/process/execute/QueryLoyaltyMembers";
+//    NSDictionary *data = @{@"loyaltyId":trimEmail, @"firstName": @"Abhijit", @"lastName": @"killedar", @"email": @"abhijit@oneviewcommerce.com", @"phone": @""};
     
-    NSData *postData = [NSJSONSerialization dataWithJSONObject:data options:NSJSONWritingPrettyPrinted error:nil];
-    NSString *postLength = [NSString stringWithFormat:@"%d",(int)[postData length]];
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",delegate.SER,link]]];
-    [request setHTTPMethod:@"POST"];
-    [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
-    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setHTTPBody:postData];
+    NSDictionary *data = @{@"loyaltyId":trimEmail, @"firstName": @"", @"lastName": @"", @"email": trimEmail, @"phone": @""};
 
-    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-    operation.responseSerializer = [AFJSONResponseSerializer serializer];
     
-    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"respose:%@",responseObject);
-        NSMutableDictionary *returnDict=responseObject;
-        self.view.userInteractionEnabled = YES;
+    [activityIndicator showActivityIndicator];
+    [APIservice loginApiWithCompletionBlock:^(NSDictionary *resultDic) {
+        [activityIndicator hideActivityIndicator];
         
-        if (returnDict != nil && returnDict != (id)[NSNull null]) {
+        if ([CommonWebServices isWebResponseNotEmpty:resultDic])
+        {
+            if ([resultDic isKindOfClass:[NSDictionary class]])
+            {
+                self.view.userInteractionEnabled=NO;
+                NSLog(@"Login Return Data: %@",resultDic);
+                [delegate.userInfoArr addObjectsFromArray:[[[resultDic objectForKey:@"data"]objectForKey:@"memberList"] mutableCopy]];
+                NSMutableDictionary *userDetail = [[NSMutableDictionary alloc]init];
+                
+                if (![[[delegate.userInfoArr firstObject] valueForKey:@"email"] isEqualToString:@""]) {
+                    [userDetail setValue:[[delegate.userInfoArr firstObject] valueForKey:@"email"] forKey:@"email"];
+                }
+                
+                if (![[[delegate.userInfoArr firstObject] valueForKey:@"firstName"] isEqualToString:@""]) {
+                    [userDetail setValue:[[delegate.userInfoArr firstObject] valueForKey:@"firstName"] forKey:@"firstName"];
+                }
+                
+                if (![[[delegate.userInfoArr firstObject] valueForKey:@"lastName"] isEqualToString:@""]) {
+                    [userDetail setValue:[[delegate.userInfoArr firstObject] valueForKey:@"lastName"] forKey:@"lastName"];
+                 }
+                
+                if (![[[delegate.userInfoArr firstObject] valueForKey:@"loyaltyId"] isEqualToString:@""] ) {
+                    [userDetail setValue:[[delegate.userInfoArr firstObject] valueForKey:@"loyaltyId"] forKey:@"loyaltyId"];
+                }
+                
+                if ([[delegate.userInfoArr firstObject] valueForKey:@"homePhone"] != (id) [NSNull null]) {
+                    [userDetail setValue:[[delegate.userInfoArr firstObject] valueForKey:@"homePhone"] forKey:@"homePhone"];
+                }
+                
+                if ([[delegate.userInfoArr firstObject] valueForKey:@"homePhone"] != (id) [NSNull null]) {
+                    [userDetail setValue:[[delegate.userInfoArr firstObject] valueForKey:@"mobilePhone"] forKey:@"mobilePhone"];
+                }
             
-            self.view.userInteractionEnabled=NO;
-            NSLog(@"Login Return Data: %@",returnDict);
-            [delegate.userInfoArr addObjectsFromArray:[[returnDict objectForKey:@"data"]objectForKey:@"memberList"]];
-            
-            [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"FirstTime"];
-            [[NSUserDefaults standardUserDefaults]setObject:urlTxtfld.text forKey:@"Servername"];
-            self.view.userInteractionEnabled=YES;
-            [indicatorView stopAnimating];
-
-            MyWishViewController *wishObj=[[MyWishViewController alloc]init];
-            [self.navigationController pushViewController:wishObj animated:NO];
+                [[NSUserDefaults standardUserDefaults] setObject:userDetail forKey:USERDETAIL];
+                
+                [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"FirstTime"];
+                self.view.userInteractionEnabled=YES;
+                
+                MyWishViewController *wishObj=[[MyWishViewController alloc]init];
+                [self.navigationController pushViewController:wishObj animated:NO];
+            }
         }
         
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        
-        NSLog(@"Connected Failed:%@",error.localizedDescription);
-        self.view.userInteractionEnabled=YES;
-        UIAlertView *alertObj = [[UIAlertView alloc]initWithTitle:@"Alert" message:error.localizedDescription delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-        [alertObj show];
-        [indicatorView stopAnimating];
-    }];
-    
-    [operation start];
-
+    } failureBlock:^(NSError *error) {
+        [activityIndicator hideActivityIndicator];
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil
+                                                            message:[error localizedDescription]
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Ok"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+    } dataDict:data];
 }
 
 #pragma mark-UITextfield delegate Function
@@ -416,14 +431,14 @@
 -(void)changeText{
     
     if ([chooseLbl.text isEqualToString:@"http://"]||[chooseLbl.text isEqualToString:@""]) {
-       
+        
         chooseLbl.text = @"";
-
+        
     }
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
-   
+    
     [naviLogo removeFromSuperview];
     
 }

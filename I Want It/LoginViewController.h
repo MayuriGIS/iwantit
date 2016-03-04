@@ -7,13 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "Constants.h"
 #import "AppDelegate.h"
-#import "AFHTTPRequestOperationManager.h"
+
 @interface LoginViewController : UIViewController<UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate>{
     AppDelegate *delegate;
+    CommonWebServices *APIservice;
+    ActivityIndicatorController *activityIndicator;
     
+    NSString *serverUrl;
 }
-//AFHTTPClient
 
 @end

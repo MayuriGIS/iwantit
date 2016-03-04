@@ -7,7 +7,6 @@
 //
 
 #import "SideOptionViewController.h"
-#import "MFSideMenu.h"
 @interface SideOptionViewController (){
     
     int selectedIndex;
@@ -17,11 +16,10 @@
 
 @implementation SideOptionViewController
 
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    selectedIndex = 0;
+    selectedIndex = 1;
     self.menuContainerViewController.menuWidth = 80;
     if (NSFoundationVersionNumber > NSFoundationVersionNumber_iOS_6_1)
     {
@@ -32,9 +30,10 @@
     self.view.backgroundColor=[UIColor colorWithRed:45.0f/255.0f green:45.0f/255.0f blue:45.0f/255.0f alpha:1];
     self.menuContainerViewController.menuWidth = 80;
     
-    unSeleImg = [[NSMutableArray alloc]initWithObjects:@"wishlist_unselbtn",@"appointment_unselbtn",@"shopper_unselbtn",@"scan_unselbtn",@"search_unselbtn",@"logout_unselbtn", nil];
+    unSeleImg = [[NSMutableArray alloc]initWithObjects:@"beacon_unselbtn", @"wishlist_unselbtn",@"appointment_unselbtn",@"shopper_unselbtn",@"scan_unselbtn",@"search_unselbtn",@"logout_unselbtn", nil];
     
-    seleImg = [[NSMutableArray alloc]initWithObjects:@"wishlist_selbtn",@"appointment_selbtn",@"sho_selbtn",@"scan_selbtn",@"search_selbtn",@"logout_selbtn", nil];
+    seleImg = [[NSMutableArray alloc]initWithObjects:@"beacon_selbtn", @"wishlist_selbtn",@"appointment_selbtn",@"sho_selbtn",@"scan_selbtn",@"search_selbtn",@"logout_selbtn", nil];
+    
 
     UIImageView *LogoIcon = [[UIImageView alloc]init];
     LogoIcon.image = [UIImage imageNamed:@"logo"];
@@ -43,7 +42,7 @@
     
     UITableView *tableView = [[UITableView alloc]initWithFrame:CGRectZero];
     tableView.backgroundColor = [UIColor clearColor];
-    tableView.frame = CGRectMake(0,88,80,518);
+    tableView.frame = CGRectMake(0,88,80,476);
     tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     tableView.delegate = self;
     tableView.dataSource = self;
@@ -52,9 +51,6 @@
     if (IS_IPHONE4) {
         
         tableView.frame = CGRectMake(0, tableView.frame.origin.y, tableView.frame.size.width,480 - tableView.frame.origin.y);
-        tableView.scrollEnabled = YES;
-    }else{
-        tableView.scrollEnabled = NO;
     }
 }
 
@@ -102,10 +98,18 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
    
-    selectedIndex = indexPath.row;
+    selectedIndex = (int)indexPath.row;
     [tableView reloadData];
     
     if (indexPath.row==0) {
+        
+        iBeaconViewController *searchObj = [[iBeaconViewController alloc] init];
+        UINavigationController *navigationController = self.menuContainerViewController.centerViewController;
+        NSArray *controllers = [NSArray arrayWithObject:searchObj];
+        navigationController.viewControllers = controllers;
+        [self.menuContainerViewController setMenuState:MFSideMenuStateClosed];
+        
+    }else if (indexPath.row==1) {
         
         MyWishViewController *wishObj = [[MyWishViewController alloc] init];
         UINavigationController *navigationController = self.menuContainerViewController.centerViewController;
@@ -113,7 +117,7 @@
         navigationController.viewControllers = controllers;
         [self.menuContainerViewController setMenuState:MFSideMenuStateClosed];
         
-    }else if (indexPath.row==1){
+    }else if (indexPath.row==2){
         
         delegate.naviPath=@"appointment";
         AppointmentViewController *appObj = [[AppointmentViewController alloc] init];
@@ -122,14 +126,14 @@
         navigationController.viewControllers = controllers;
         [self.menuContainerViewController setMenuState:MFSideMenuStateClosed];
         
-    }else if (indexPath.row==2){
+    }else if (indexPath.row==3){
         MyShopperViewController *myShopObj = [[MyShopperViewController alloc] init];
         UINavigationController *navigationController = self.menuContainerViewController.centerViewController;
         NSArray *controllers = [NSArray arrayWithObject:myShopObj];
         navigationController.viewControllers = controllers;
         [self.menuContainerViewController setMenuState:MFSideMenuStateClosed];
         
-    }else if (indexPath.row==3){
+    }else if (indexPath.row==4){
         delegate.naviPath=@"scanView";
         ScanViewController *scanObj = [[ScanViewController alloc] init];
         UINavigationController *navigationController = self.menuContainerViewController.centerViewController;
@@ -137,14 +141,14 @@
         navigationController.viewControllers = controllers;
         [self.menuContainerViewController setMenuState:MFSideMenuStateClosed];
         
-    }else if (indexPath.row==4){
-        
-        SearchViewController *searchObj = [[SearchViewController alloc] init];
+    }else if (indexPath.row==5){
+       
+        SearchViewController *scanObj = [[SearchViewController alloc] init];
         UINavigationController *navigationController = self.menuContainerViewController.centerViewController;
-        NSArray *controllers = [NSArray arrayWithObject:searchObj];
+        NSArray *controllers = [NSArray arrayWithObject:scanObj];
         navigationController.viewControllers = controllers;
         [self.menuContainerViewController setMenuState:MFSideMenuStateClosed];
-    
+
     }else{
         [delegate.dataBaseObj deleteAllTables];
         [[NSUserDefaults standardUserDefaults]setBool:NO forKey:@"FirstTime"];
@@ -153,8 +157,7 @@
         NSArray *controllers = [NSArray arrayWithObject:logObj];
         navigationController.viewControllers = controllers;
         [self.menuContainerViewController setMenuState:MFSideMenuStateClosed];
-        selectedIndex=0;
-
+        selectedIndex = 1;
     }
 }
 

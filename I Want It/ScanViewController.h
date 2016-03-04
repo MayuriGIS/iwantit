@@ -7,16 +7,22 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MFSideMenu.h"
 #import "AppDelegate.h"
 #import "MyWishViewController.h"
 #import "ProductViewController.h"
-#import "ZBarReaderController.h"
-#import "ZBarReaderViewController.h"
-@interface ScanViewController : UIViewController< ZBarReaderDelegate, UITextFieldDelegate,UIAlertViewDelegate>{
+#import "MTBBarcodeScanner.h"
+
+@interface ScanViewController : UIViewController<UITextFieldDelegate,UIAlertViewDelegate>{
     UIImageView *resultImage;
     UITextField *resultText;
     AppDelegate *delegate;
+    UIView *scannerView;
+    ActivityIndicatorController *activityIndicator;
+    CommonWebServices *APIservice;
 }
+@property (nonatomic, strong) MTBBarcodeScanner *scanner;
+@property (nonatomic, strong) NSMutableArray *uniqueCodes;
+@property (nonatomic, assign) BOOL captureIsFrozen;
+@property (nonatomic, assign) BOOL didShowCaptureWarning;
 
 @end

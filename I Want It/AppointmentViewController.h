@@ -7,15 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "Constants.h"
 #import "AppDelegate.h"
 #import "AvailableAppointViewController.h"
 #import "AppointDetailViewController.h"
 #import "ChatScreen.h"
 @interface AppointmentViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate>{
-    
     AppDelegate *delegate;
     NSMutableArray *returnData;
+    CommonWebServices *APIservice;
+    ActivityIndicatorController *activityIndicator;
 
 }
 

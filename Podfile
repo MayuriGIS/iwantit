@@ -1,0 +1,6 @@
+pod 'MBProgressHUD', '~> 0.9'
+pod 'MTBBarcodeScanner', '~> 1.9'
+pod 'MFSideMenu', '~> 0.5'
+pod 'HPGrowingTextView', '~> 1.1'
+pod 'SDWebImage', '~> 3.7'
+pod 'Reachability', '~> 3.2'

@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "0949C60C1A5C2FA8009E6666"
-               BuildableName = "I Want It | 1.30.app"
+               BuildableName = "I Want It | 1.33.app"
                BlueprintName = "I Want It"
                ReferencedContainer = "container:I Want It.xcodeproj">
             </BuildableReference>
@@ -33,7 +33,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "0949C60C1A5C2FA8009E6666"
-            BuildableName = "I Want It | 1.30.app"
+            BuildableName = "I Want It | 1.33.app"
             BlueprintName = "I Want It"
             ReferencedContainer = "container:I Want It.xcodeproj">
          </BuildableReference>
@@ -48,11 +48,12 @@
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
-      <BuildableProductRunnable>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "0949C60C1A5C2FA8009E6666"
-            BuildableName = "I Want It | 1.30.app"
+            BuildableName = "I Want It | 1.33.app"
             BlueprintName = "I Want It"
             ReferencedContainer = "container:I Want It.xcodeproj">
          </BuildableReference>
@@ -66,11 +67,12 @@
       useCustomWorkingDirectory = "NO"
       buildConfiguration = "Release"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "0949C60C1A5C2FA8009E6666"
-            BuildableName = "I Want It | 1.30.app"
+            BuildableName = "I Want It | 1.33.app"
             BlueprintName = "I Want It"
             ReferencedContainer = "container:I Want It.xcodeproj">
          </BuildableReference>

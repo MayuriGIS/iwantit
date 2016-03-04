@@ -32,11 +32,10 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(makeTheChange) name:@"theChange" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideBtn) name:@"removeBtn" object:nil];
-    NSLog(@"product:%@",delegate.productDict);
+
     self.view.backgroundColor = [UIColor whiteColor];
     AddOptionViewController *AddObjMenu = [[AddOptionViewController alloc]init];
     self.menuContainerViewController.rightMenuViewController = AddObjMenu;
-   
     
     sideMenuBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     sideMenuBtn.frame = CGRectMake(0,0,40,64);
@@ -68,20 +67,21 @@
     itemScroll.backgroundColor = [UIColor whiteColor];
     itemScroll.showsVerticalScrollIndicator= NO;
     [self.view addSubview:itemScroll];
-  
     
-    AsyncImageView *imageView = [[AsyncImageView alloc]init];
+    UIImageView *imageView = [[UIImageView alloc]init];
     imageView.contentMode = UIViewContentModeScaleAspectFit;
-//    imageView.contentMode = UIViewContentModeScaleAspectFill;
     imageView.clipsToBounds = YES;
-    [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget:imageView];
     
     if ([[[[delegate.productDict objectForKey:@"data"] objectForKey:@"SearchObjectList"] objectAtIndex:0] objectForKey:@"mainImageId"] != (id) [NSNull null] && ![[[[[delegate.productDict objectForKey:@"data"] objectForKey:@"SearchObjectList"] objectAtIndex:0] objectForKey:@"mainImageId"]  isEqual: @""] ) {
-        
-        [imageView setImageURL:[NSURL URLWithString:[[[[delegate.productDict objectForKey:@"data"] objectForKey:@"SearchObjectList"] objectAtIndex:0] objectForKey:@"mainImageId"]]];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [imageView sd_setImageWithURL:[NSURL URLWithString:[[[[delegate.productDict objectForKey:@"data"] objectForKey:@"SearchObjectList"] objectAtIndex:0] objectForKey:@"mainImageId"]]
+                         placeholderImage:[UIImage imageNamed:@"shirt_ref"]];
+            
+        });
     }else{
         imageView.image = [UIImage imageNamed:@"noimg"];
     }
+
     [itemScroll addSubview:imageView];
     
     UILabel *productName = [[UILabel alloc]init];
@@ -108,32 +108,31 @@
     productDetailLbl.font = [UIFont fontWithName:@"OpenSans-Semibold" size:14.0];
     [itemScroll addSubview:productDetailLbl];
     
-    UITextView *productDetail = [[UITextView alloc]init];
-    
+    productDetail = [[UITextView alloc]init];
     NSString *htmlString = [[[[delegate.productDict objectForKey:@"data"] objectForKey:@"SearchObjectList"] objectAtIndex:0] objectForKey:@"description"];
-    NSAttributedString *attributedString = [[NSAttributedString alloc] initWithData:[htmlString dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
+ 
+    NSAttributedString *attributedString =  [[NSAttributedString alloc] initWithData:[htmlString dataUsingEncoding:NSUTF8StringEncoding]
+                                     options:@{NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
+                                               NSCharacterEncodingDocumentAttribute: @(NSUTF8StringEncoding)}
+                          documentAttributes:nil error:nil];
+
+    CGRect txtSize =
+    [attributedString boundingRectWithSize:CGSizeMake(300.f, 480)
+                                   options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading)
+                                   context:nil];
+    productDetail.attributedText = attributedString;
+//    NSString *htmlString = [[[[delegate.productDict objectForKey:@"data"] objectForKey:@"SearchObjectList"] objectAtIndex:0] objectForKey:@"description"];
 
     productDetail.userInteractionEnabled = NO;
     [itemScroll addSubview:productDetail];
-    
-    CGRect txtSize =
-    [attributedString boundingRectWithSize:CGSizeMake(300.f, 480)
-                                 options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading)
-                                 context:nil];
-    productDetail.attributedText = attributedString;
     productDetail.font = [UIFont fontWithName:@"Kailasa" size:12.0];
 
     if (IS_IPHONE4) {
-       
         itemScroll.frame = CGRectMake(0, 0, 320, 480);
-        
     }else{
-        
         itemScroll.frame = CGRectMake(0, 0, 320, 505);
-
     }
-//    [itemScroll addParallaxWithView:imageView andHeight:177];
-    
+        
     
     imageView.frame = CGRectMake(0, 0, 320, 180);
     
@@ -169,20 +168,14 @@
 
 
     if (IS_IPHONE4) {
-        
         popUpView.frame = CGRectMake(0, 0, 320, 480);
         existBtn.frame = CGRectMake(60, 190, 200, 40);
         newBtn.frame = CGRectMake(60, 250, 200, 40);
-
     }else{
-        
         popUpView.frame = CGRectMake(0, 0, 320, 568);
         existBtn.frame = CGRectMake(60, 234, 200, 40);
         newBtn.frame = CGRectMake(60, 304, 200, 40);
-
     }
-
-    
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -196,11 +189,9 @@
     titleLbl.textAlignment = NSTextAlignmentCenter;
     [titleLbl sizeToFit];
     self.navigationItem.titleView = titleLbl;
-
 }
 
 - (void)menuBtnAction {
-    
     [self.menuContainerViewController toggleLeftSideMenuCompletion:nil];
 }
 
@@ -215,10 +206,8 @@
         [self.navigationController popViewControllerAnimated:YES];
 
     }else{
-       
         MyWishViewController *myObj = [[MyWishViewController alloc]init];
         [self.navigationController pushViewController:myObj animated:NO];
-
     }
     
 }

@@ -15,8 +15,6 @@
     UITableView *productTableView ;
     UILabel *notifLbl,*dateValLbl;
     NSString *dateStr;
-    UIActivityIndicatorView *indicatorView;
-
     int appointmentApi;
 }
 
@@ -33,7 +31,7 @@
 
     appointmentApi=0;
     
-    [self appointmentDetailsApi];
+//    [self appointmentDetailsApi];
     
     imageArr=[[NSMutableArray alloc]initWithCapacity:0];
     imageName=[[NSMutableArray alloc]initWithCapacity:0];
@@ -298,10 +296,10 @@
   
     }
 }
--(float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return 150;
 }
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *CellIdentifier = @"Cell";
     
@@ -312,14 +310,12 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     
-        AsyncImageView *imageView = [[AsyncImageView alloc]init];
+        UIImageView *imageView = [[UIImageView alloc]init];
         imageView.frame=CGRectMake(60, 5, 200, 140);
         imageView.clipsToBounds = YES;
         imageView.backgroundColor=[UIColor colorWithRed:219.0f/255.0f green:219.0f/255.0f blue:219.0f/255.0f alpha:1];
-        [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget:imageView];
-        
-        [imageView setImageURL:[NSURL URLWithString:[imageArr objectAtIndex:indexPath.row]]];
-       
+    
+    
         UIView *detailView = [[UIView alloc]init];
         detailView.backgroundColor = [UIColor blackColor];
         detailView.layer.opacity = 0.6;
@@ -348,22 +344,12 @@
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     
     if (alertView.tag==101) {
-        
         AppointmentViewController *appObj=[[AppointmentViewController alloc]init];
         [self.navigationController pushViewController:appObj animated:YES];
-        
-        
     }else{
-       
         if (buttonIndex==0) {
-            
-            indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-            [indicatorView startAnimating];
-            [indicatorView setCenter:CGPointMake(320/2-5,320/2-5)];
-            [self.view addSubview:indicatorView];
             [self cancelAppointment];
         }
-
     }
 }
 
@@ -397,55 +383,29 @@
     NSMutableDictionary *userData=[NSMutableDictionary dictionaryWithObjectsAndKeys:[[apptArray objectAtIndex:delegate.selectedIndex]valueForKey:@"id"],@"appointmentId",@"demoRetailer",@"retailerId",nil];
     
     NSMutableDictionary *data = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"eCommerce",@"username",@"changeme",@"password",@"dUUID",@"deviceId",@"external",@"source",userData,@"data",nil];
-    NSString *link=@"POSMClient/json/process/execute/GetAppointmentDetails";
+    NSString *link = [NSString stringWithFormat:@"POSMClient/json/process/execute/GetAppointmentDetails"];
     
-    NSData *postData=[NSJSONSerialization dataWithJSONObject:data options:NSJSONWritingPrettyPrinted error:nil];
-    NSString *postLength = [NSString stringWithFormat:@"%d",(int)[postData length]];
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    request.timeoutInterval=60.0f;
-    [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",delegate.SER,link]]];
-    [request setHTTPMethod:@"POST"];
-    [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
-    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setHTTPBody:postData];
-    
-    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-    operation.responseSerializer = [AFJSONResponseSerializer serializer];
-    
-    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"respose:%@",responseObject);
-        NSMutableDictionary *returnDict=responseObject;
-        self.view.userInteractionEnabled = YES;
-        
-        if (returnDict != nil && returnDict != (id)[NSNull null]) {
-            
-            if ([[[returnDict objectForKey:@"data"]objectForKey:@"appointmentItemList"]count]!=0) {
-                NSLog(@"Appt List Data: %@",[[[[returnDict objectForKey:@"data"]objectForKey:@"appointmentItemList"]objectAtIndex:0]objectForKey:@"mainImageId"]);
-                
-                [imageArr addObject:[[[[returnDict objectForKey:@"data"]objectForKey:@"appointmentItemList"]objectAtIndex:0]objectForKey:@"mainImageId"]];
-                
-                [imageName addObject:[[[[returnDict objectForKey:@"data"]objectForKey:@"appointmentItemList"]objectAtIndex:0]objectForKey:@"name"]];
-                
-                [productTableView reloadData];
-                
-            }
-        }
-        
-           
-        
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        
-        
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error Reterive Data"
-                                                            message:[error localizedDescription]
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"Ok"
-                                                  otherButtonTitles:nil];
-        [alertView show];
-    }];
-    
-    [operation start];
-    
+    [activityIndicator showActivityIndicator];
+    [CommonWebServices postMethodWithUrl:link dictornay:data onSuccess:^(id responseObject)
+     {
+         [activityIndicator hideActivityIndicator];
+         
+         if ([CommonWebServices isWebResponseNotEmpty:responseObject])
+         {
+             if ([responseObject isKindOfClass:[NSDictionary class]])
+             {
+             }
+             else
+             {
+             }
+         }
+         
+     } onFailure:^(NSError *error)
+     {
+         [activityIndicator hideActivityIndicator];
+         NSLog(@"Error Received : %@", error.localizedDescription);
+         
+     }];
 }
 
 -(void)deleteAct{
@@ -470,56 +430,15 @@
      data: {}
      }*/
     
-    NSLog(@"apptArray:%@",[[apptArray objectAtIndex:delegate.selectedIndex]valueForKey:@"id"]);
-    
     appointmentApi=1;
  
     NSMutableDictionary *userData=[NSMutableDictionary dictionaryWithObjectsAndKeys:[[apptArray objectAtIndex:delegate.selectedIndex]valueForKey:@"id"],@"apptId",@"Decided not to buy",@"cancelReason",nil];
     
     NSMutableDictionary *data = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"eCommerce",@"username",@"changeme",@"password",@"dUUID",@"deviceId",@"external",@"source",userData,@"data",nil];
-    NSString *link=@"POSMClient/json/process/execute/CancelAppointment";
+//    NSString *link=[NSString stringWithFormat:@"%@POSMClient/json/process/execute/CancelAppointment",delegate.SER];
     
-    NSData *postData=[NSJSONSerialization dataWithJSONObject:data options:NSJSONWritingPrettyPrinted error:nil];
-    NSString *postLength = [NSString stringWithFormat:@"%d",(int)[postData length]];
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    request.timeoutInterval=60.0f;
-    [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",delegate.SER,link]]];
-    [request setHTTPMethod:@"POST"];
-    [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
-    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setHTTPBody:postData];
-    
-    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-    operation.responseSerializer = [AFJSONResponseSerializer serializer];
-    
-    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"respose:%@",responseObject);
-        NSMutableDictionary *returnDict=responseObject;
-        self.view.userInteractionEnabled = YES;
-        
-        if (returnDict != nil && returnDict != (id)[NSNull null]) {
-            
-                [indicatorView stopAnimating];
-                [indicatorView removeFromSuperview];
-            UIAlertView *alrView=[[UIAlertView alloc]initWithTitle:@"Alert" message:@"Product successfully deleted" delegate:self cancelButtonTitle:@"Dissmiss" otherButtonTitles:nil, nil];
-            alrView.tag=101;
-            [alrView show];
-            
-        }
-        
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        
-        
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error Reterive Data"
-                                                            message:[error localizedDescription]
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"Ok"
-                                                  otherButtonTitles:nil];
-        [alertView show];
-    }];
-    
-    [operation start];
-    
+    [activityIndicator showActivityIndicator];
+   
 
 }
 -(void)viewWillDisappear:(BOOL)animated{

@@ -8,15 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "AddOptionViewController.h"
-#import "MFSideMenu.h"
 #import "MyWishViewController.h"
-#import "Constants.h"
 #import "AppDelegate.h"
 @interface ProductViewController : UIViewController{
-    
     AppDelegate *delegate;
     UIButton *existBtn, *newBtn;
-
+    UITextView *productDetail;
 }
 @property (nonatomic) UIButton *addBtn;
 

@@ -7,9 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MFSideMenu.h"
 #import "AppDelegate.h"
-#import "Constants.h"
 #import "ProductViewController.h"
 #import "SideOptionViewController.h"
 
@@ -20,6 +18,8 @@
     NSMutableArray *searchResults;
     BOOL isSearch;
     AppDelegate *delegate;
+    ActivityIndicatorController *activityIndicator;
+    CommonWebServices *APIservice;
 }
 
 @end

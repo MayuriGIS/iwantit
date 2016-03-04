@@ -13,9 +13,7 @@
     UILabel *titleLbl;
     UIView *optionBackview;
     NSMutableArray *shopperArr;
-    UIActivityIndicatorView *indicatorView;
     NSString *productId,*itemId;
-
 }
 
 @end
@@ -32,6 +30,14 @@
 
     delegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     apiAction = 0;
+    
+    activityIndicator = [[ActivityIndicatorController alloc] init];
+    [activityIndicator initWithViewController:self];
+    
+    APIservice = [[CommonWebServices alloc] init];
+    APIservice.delegate = self;
+    APIservice.activityIndicator = activityIndicator;
+
     self.view.backgroundColor = [UIColor whiteColor];
     self.menuContainerViewController.panMode = MFSideMenuPanModeDefault;
     self.menuContainerViewController.rightMenuViewController=nil;
@@ -60,7 +66,6 @@
     [chatBtn setImage:[UIImage imageNamed:@"chat_icon"] forState:UIControlStateNormal];
     [chatBtn addTarget:self action:@selector(chatBtnAct) forControlEvents:UIControlEventTouchUpInside];
 
-//    UIBarButtonItem *leftA = [[UIBarButtonItem alloc]initWithCustomView:cameraBtn];
     UIBarButtonItem *leftB = [[UIBarButtonItem alloc]initWithCustomView:chatBtn];
     self.navigationItem.rightBarButtonItems =[NSArray arrayWithObjects:leftB, nil];
 
@@ -78,6 +83,21 @@
     }else{
         tableView.frame=CGRectMake(0, 5, 320,505);
     }
+    
+    NSMutableDictionary *productDit = [[NSMutableDictionary alloc]init];
+    [productDit setValue:@"5C101" forKey:@"productId"];
+    [productDit setValue:@"0" forKey:@"itemidx"];
+    [productDit setValue:@"http://ecx.images-amazon.com/images/I/610R%2B6uESPL._SL1000_.jpg" forKey:@"image"];
+    [productDit setValue:@"Canon EOS 1200D 18MP Digital SLR Camera (Black) with 18-55mm and 55-250mm IS II Lens,8GB card and Carry Bag" forKey:@"description"];
+    [productDit setValue:@"25,340.00" forKey:@"amount"];
+    [productDit setValue:@"2" forKey:@"quantity"];
+
+    
+    tableView.hidden = NO;
+    [shopperArr addObject:productDit];
+    [tableView reloadData];
+
+    /*
     if ([delegate isNetConnected]) {
         apiAction = 0;
         [self myShopperApi];
@@ -85,12 +105,11 @@
         shopperArr = [delegate.dataBaseObj readShopper];
         tableView.hidden=NO;
         [tableView reloadData];
-    }
+    }*/
 
 }
 
 -(void)viewWillAppear:(BOOL)animated{
-    
     titleLbl=[[UILabel alloc]init];
     titleLbl.frame=CGRectMake(0,0,200,40);
     titleLbl.text=@"My Shopper";
@@ -174,14 +193,15 @@
         [cell addSubview:productBackView];
         
         
-        AsyncImageView *productImg = [[AsyncImageView alloc]init];
+        UIImageView *productImg = [[UIImageView alloc]init];
         productImg.contentMode = UIViewContentModeScaleAspectFit;
         productImg.clipsToBounds = YES;
-        [[AsyncImageLoader sharedLoader] cancelLoadingImagesForTarget:productImg];
         
         if ([[shopperArr objectAtIndex:indexPath.row]objectForKey:@"image"] != (id) [NSNull null] && ![[[shopperArr objectAtIndex:indexPath.row]objectForKey:@"image"]  isEqual: @""]) {
             
-            [productImg setImageURL:[NSURL URLWithString:[[shopperArr objectAtIndex:indexPath.row]objectForKey:@"image"]]];
+         [productImg sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@",[[shopperArr objectAtIndex:indexPath.row]objectForKey:@"image"]]]
+                       placeholderImage:[UIImage imageNamed:@"shirt_ref"]];
+         
         }else{
             productImg.image = [UIImage imageNamed:@"noimage"];
         }
@@ -267,17 +287,8 @@
     
 - (void)tableView:(UITableView *)tableView1 didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    self.view.userInteractionEnabled = NO;
-    
-    indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-    [indicatorView startAnimating];
-    [indicatorView setCenter:CGPointMake(320/2-4,320/2-1)];
-    
-    [tableView addSubview:indicatorView];
-    
-    
     apiAction = 3;
-    delegate.selectedIndex=indexPath.row;
+    delegate.selectedIndex = (int)indexPath.row;
     delegate.productId = [[shopperArr objectAtIndex:indexPath.row]valueForKey:@"productId"];
     delegate.proAmount = [[shopperArr objectAtIndex:indexPath.row]valueForKey:@"amount"];
     [self productApi];
@@ -286,20 +297,16 @@
 
 -(void)addWishlist:(UIButton *)sender{
     
-    int tag = [sender tag] - 1000;
+    int tag = (int)[sender tag] - 1000;
     productId = [[shopperArr objectAtIndex:tag]valueForKey:@"productId"];
     itemId = [[shopperArr objectAtIndex:tag]valueForKey:@"itemidx"];
     
     if ([delegate isNetConnected]) {
-      
         [self addWishListApi:[shopperArr objectAtIndex:tag]];
         [self removeApi:productId itemId:itemId];
-
-
     }else{
         [delegate.dataBaseObj insertWishlistData:[shopperArr objectAtIndex:tag]];
         [delegate.dataBaseObj removeProductFromWishlist:productId tableName:@"shopper_tbl"];
-
         [tableView reloadData];
     }
 //    wishListArray = [delegate.dataBaseObj readWishlist];
@@ -307,17 +314,15 @@
 
 -(void)removeWishlist:(UIButton *)sender{
     
-    int tag = [sender tag] - 2000;
+    int tag = (int)[sender tag] - 2000;
     productId = [[shopperArr objectAtIndex:tag]valueForKey:@"productId"];
     itemId = [[shopperArr objectAtIndex:tag]valueForKey:@"itemidx"];
     if ([delegate isNetConnected]) {
         [self removeApi:productId itemId:itemId];
         [self deleleApi];
     }else{
-       
         [delegate.dataBaseObj removeProductFromWishlist:productId tableName:@"shopper_tbl"];
         [delegate.dataBaseObj removeProductFromWishlist:productId tableName:@"wishlist_tbl"];
-
     }
 }
 
@@ -352,64 +357,47 @@
 
 -(void)myShopperApi{
   
-    indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-    [indicatorView startAnimating];
-    [indicatorView setCenter:CGPointMake(320/2-5,320/2-5)];
-    [self.view addSubview:indicatorView];
-
     [shopperArr removeAllObjects];
     NSMutableDictionary *userData = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"shopper@ovc.com",@"loyaltyId",@"demoRetailer",@"retailerId",@"WISHLIST",@"listType",@"WishList",@"listName",nil];
     NSMutableDictionary *data = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"eCommerce",@"username",@"changeme",@"password",@"dUUID",@"deviceId",@"external",@"source",userData,@"data",nil];
-    NSString *link = @"POSMClient/json/process/execute/GetWishlistItems";
+    NSString *link = [NSString stringWithFormat:@"%@POSMClient/json/process/execute/GetWishlistItems",[[NSUserDefaults standardUserDefaults] objectForKey:@"SERVERURL"]];
     
-    NSData *postData = [NSJSONSerialization dataWithJSONObject:data options:NSJSONWritingPrettyPrinted error:nil];
-    NSString *postLength = [NSString stringWithFormat:@"%d",(int)[postData length]];
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    request.timeoutInterval=60.0f;
-    [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",delegate. SER,link]]];
-    [request setHTTPMethod:@"POST"];
-    [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
-    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setHTTPBody:postData];
-    
-    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-    operation.responseSerializer = [AFJSONResponseSerializer serializer];
-    
-    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"respose:%@",responseObject);
-        NSMutableDictionary *returnDict=responseObject;
-        self.view.userInteractionEnabled = YES;
+    [activityIndicator showActivityIndicator];
+    [APIservice loginApiWithCompletionBlock:^(NSDictionary *resultDic) {
+        [activityIndicator hideActivityIndicator];
         
-        if (returnDict != nil && returnDict != (id)[NSNull null]) {
-            
-            if ([[[returnDict objectForKey:@"data"]objectForKey:@"data"]count] != 0 ) {
-                [delegate.dataBaseObj deleteShopperTable];
-                [delegate.dataBaseObj insertShopperlistData:returnDict];
-                shopperArr = [delegate.dataBaseObj readShopper];
-                tableView.hidden=NO;
-                [tableView reloadData];
-
-            }else{
+        if ([CommonWebServices isWebResponseNotEmpty:resultDic])
+        {
+            if ([resultDic isKindOfClass:[NSDictionary class]])
+            {
+                self.view.userInteractionEnabled=NO;
+                NSLog(@"Login Return Data: %@",resultDic);
+                [delegate.userInfoArr addObjectsFromArray:[[resultDic objectForKey:@"data"]objectForKey:@"memberList"]];
                 
-                tableView.hidden=NO;
-                [tableView reloadData];
-
+                [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"FirstTime"];
+//                [[NSUserDefaults standardUserDefaults]setObject:urlTxtfld.text forKey:@"Servername"];
+                self.view.userInteractionEnabled=YES;
+                
+                MyWishViewController *wishObj=[[MyWishViewController alloc]init];
+                [self.navigationController pushViewController:wishObj animated:NO];
             }
         }
-        [tableView reloadData];
-        [indicatorView stopAnimating];
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         
-        NSLog(@"Connected Failed:%@",error.localizedDescription);
-        self.view.userInteractionEnabled=YES;
-        UIAlertView *alertObj = [[UIAlertView alloc]initWithTitle:@"Alert" message:error.localizedDescription delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-        [alertObj show];
-        [indicatorView stopAnimating];
-    }];
-    
-    [operation start];
-    
+    } failureBlock:^(NSError *error) {
+        [activityIndicator hideActivityIndicator];
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil
+                                                            message:[error localizedDescription]
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Ok"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+    } dataDict:data];
 
+    
+    
+    
+    
+    
     
 }
 
@@ -434,12 +422,8 @@
      "productId": "1934796",
      "productDesc": "PowerShot A480",
      "productQty": "1"
-     }
-     ]
-     }
-     }
-     }
-     */
+     }]}}}*/
+    
     apiAction = 1;
     NSDictionary *prodDict = [NSDictionary dictionaryWithObjectsAndKeys:[productDict objectForKey:@"productId"],@"productId",[productDict objectForKey:@"description"],@"productDesc",[productDict objectForKey:@"quantity"],@"productQty", nil];
     NSMutableArray *prodctArr = [[NSMutableArray alloc]init];
@@ -449,88 +433,63 @@
     
     NSMutableDictionary *userData = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"demoRetailer",@"retailerId",[[NSUserDefaults standardUserDefaults]stringForKey:@"userMail"],@"ovclid", @"WISHLIST",@"listType",@"WishList",@"listName",listDict, @"payload",nil];
     NSMutableDictionary *data = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"eCommerce",@"username",@"changeme",@"password",@"dUUID",@"deviceId",@"external",@"source",userData,@"data",nil];
-    NSString *link = @"POSMClient/json/process/execute/AddToWishlist";
+    NSString *link = [NSString stringWithFormat:@"%@POSMClient/json/process/execute/AddToWishlist",[[NSUserDefaults standardUserDefaults] objectForKey:@"SERVERURL"]];
     
-    NSData *postData = [NSJSONSerialization dataWithJSONObject:data options:NSJSONWritingPrettyPrinted error:nil];
-    NSString *postLength = [NSString stringWithFormat:@"%d",(int)[postData length]];
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    request.timeoutInterval=60.0f;
-    [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",delegate. SER,link]]];
-    [request setHTTPMethod:@"POST"];
-    [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
-    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setHTTPBody:postData];
-    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-    operation.responseSerializer = [AFJSONResponseSerializer serializer];
-    
-    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"respose:%@",responseObject);
-        NSMutableDictionary *returnDict=responseObject;
-        self.view.userInteractionEnabled = YES;
-        
-        if (returnDict != nil && returnDict != (id)[NSNull null]) {
-            
-            if ([returnDict objectForKey:@"data"]) {
-                
-                UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Alert" message:@"Item Successfully Added in WishList!" delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles:nil, nil];
-                [alert show];
-            }
-        }
-        
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        
-        NSLog(@"Connected Failed:%@",error.localizedDescription);
-        self.view.userInteractionEnabled=YES;
-        UIAlertView *alertObj = [[UIAlertView alloc]initWithTitle:@"Alert" message:error.localizedDescription delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-        [alertObj show];
-        [indicatorView stopAnimating];
-    }];
-    
-    [operation start];
-    
+    [activityIndicator showActivityIndicator];
+    [CommonWebServices postMethodWithUrl:link dictornay:data onSuccess:^(id responseObject)
+     {
+         [activityIndicator hideActivityIndicator];
+         
+         if ([CommonWebServices isWebResponseNotEmpty:responseObject])
+         {
+             if ([responseObject isKindOfClass:[NSDictionary class]])
+             {
+             }
+             else
+             {
+             }
+         }
+         
+     } onFailure:^(NSError *error)
+     {
+         [activityIndicator hideActivityIndicator];
+         NSLog(@"Error Received : %@", error.localizedDescription);
+         
+     }];
+
 }
 
 //remove item from WISHLIST TABLE
 - (void)deleleApi{
-    self.view.userInteractionEnabled = NO;
     
     apiAction=2;
     NSMutableDictionary *userData=[NSMutableDictionary dictionaryWithObjectsAndKeys:@"demoRetailer",@"retailerId",[[NSUserDefaults standardUserDefaults] stringForKey:@"userMail"],@"loyaltyId",@"WISHLIST",@"listType",@"WishList",@"listName",productId,@"productId",itemId,@"itemIdx",nil];
     NSMutableDictionary *data = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"eCommerce",@"username",@"changeme",@"password",@"dUUID",@"deviceId",@"external",@"source",userData,@"data",nil];
-    NSString *link=@"POSMClient/json/process/execute/RemoveFromWishlist";
+    NSString *link = [NSString stringWithFormat:@"%@POSMClient/json/process/execute/RemoveFromWishlist",[[NSUserDefaults standardUserDefaults] objectForKey:@"SERVERURL"]];
     
-    NSData *postData = [NSJSONSerialization dataWithJSONObject:data options:NSJSONWritingPrettyPrinted error:nil];
-    NSString *postLength = [NSString stringWithFormat:@"%d",(int)[postData length]];
-    //                NSURLRequest  *request =[NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",delegate.SER,link]]];
-    [request setHTTPMethod:@"POST"];
-    [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
-    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setHTTPBody:postData];
+    [activityIndicator showActivityIndicator];
+    [CommonWebServices postMethodWithUrl:link dictornay:data onSuccess:^(id responseObject)
+     {
+         [activityIndicator hideActivityIndicator];
+         
+         if ([CommonWebServices isWebResponseNotEmpty:responseObject])
+         {
+             if ([responseObject isKindOfClass:[NSDictionary class]])
+             {
+             }
+             else
+             {
+             }
+         }
+         
+     } onFailure:^(NSError *error)
+     {
+         [activityIndicator hideActivityIndicator];
+         NSLog(@"Error Received : %@", error.localizedDescription);
+         
+     }];
 
-    AFHTTPRequestOperation *operation1 = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-    operation1.responseSerializer = [AFJSONResponseSerializer serializer];
-    
-    [operation1 setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"respose:%@",responseObject);
-        NSMutableDictionary *returnDict=responseObject;
-        self.view.userInteractionEnabled = YES;
-        
-        if (returnDict != nil && returnDict != (id)[NSNull null]) {
-            delegate.productDict = returnDict;
-            
-        }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        
-        NSLog(@"Connected Failed:%@",error.localizedDescription);
-        self.view.userInteractionEnabled=YES;
-        UIAlertView *alertObj = [[UIAlertView alloc]initWithTitle:@"Alert" message:error.localizedDescription delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-        [alertObj show];
-        [indicatorView stopAnimating];
-    }];
-    
-    [operation1 start];
+
 }
 
 //remove item from SHOPPER LIST
@@ -560,50 +519,29 @@
     apiAction = 2;
     NSMutableDictionary *userData = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"demoRetailer",@"retailerId",@"shopper@ovc.com",@"loyaltyId",@"WISHLIST",@"listType",@"WishList",@"listName",productId,@"productId",itemId,@"itemIdx",nil];
     NSMutableDictionary *data = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"eCommerce",@"username",@"changeme",@"password",@"dUUID",@"deviceId",@"external",@"source",userData,@"data",nil];
-    NSString *link = @"POSMClient/json/process/execute/RemoveFromWishlist";
+    NSString *link = [NSString stringWithFormat:@"%@POSMClient/json/process/execute/RemoveFromWishlist",[[NSUserDefaults standardUserDefaults] objectForKey:@"SERVERURL"]];
     
-    
-    NSData *postData = [NSJSONSerialization dataWithJSONObject:data options:NSJSONWritingPrettyPrinted error:nil];
-    NSString *postLength = [NSString stringWithFormat:@"%d",(int)[postData length]];
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    request.timeoutInterval=60.0f;
-    [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",delegate. SER,link]]];
-    [request setHTTPMethod:@"POST"];
-    [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
-    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setHTTPBody:postData];
-    
-    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-    operation.responseSerializer = [AFJSONResponseSerializer serializer];
-    
-    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"respose:%@",responseObject);
-        NSMutableDictionary *returnDict=responseObject;
-        self.view.userInteractionEnabled = YES;
-        
-        if ([[[returnDict objectForKey:@"data"]objectForKey:@"data"]count]==0) {
-           
-            if (shopperArr.count<=1) {
-                MyShopperViewController *shopObj=[[MyShopperViewController alloc]init];
-                [self.navigationController pushViewController:shopObj animated:NO];
-                
-            }else{
-                
-                [self myShopperApi];
-
-            }
-        }
-
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        
-        NSLog(@"Connected Failed:%@",error.localizedDescription);
-        self.view.userInteractionEnabled=YES;
-        UIAlertView *alertObj = [[UIAlertView alloc]initWithTitle:@"Alert" message:error.localizedDescription delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-        [alertObj show];
-        [indicatorView stopAnimating];
-    }];
-    [tableView reloadData];
-    [operation start];
+    [activityIndicator showActivityIndicator];
+    [CommonWebServices postMethodWithUrl:link dictornay:data onSuccess:^(id responseObject)
+     {
+         [activityIndicator hideActivityIndicator];
+         
+         if ([CommonWebServices isWebResponseNotEmpty:responseObject])
+         {
+             if ([responseObject isKindOfClass:[NSDictionary class]])
+             {
+             }
+             else
+             {
+             }
+         }
+         
+     } onFailure:^(NSError *error)
+     {
+         [activityIndicator hideActivityIndicator];
+         NSLog(@"Error Received : %@", error.localizedDescription);
+         
+     }];
 
 }
 
@@ -625,53 +563,31 @@
     
     NSMutableDictionary *userData = [NSMutableDictionary dictionaryWithObjectsAndKeys:delegate.productId,@"code",nil];
     NSMutableDictionary *data = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"eCommerce",@"username",@"changeme",@"password",@"dUUID",@"deviceId",@"external",@"source",userData,@"data",nil];
-    NSString *link = @"POSMClient/json/process/execute/ProductSearch";
-    
-    NSData *postData = [NSJSONSerialization dataWithJSONObject:data options:NSJSONWritingPrettyPrinted error:nil];
-    NSString *postLength = [NSString stringWithFormat:@"%d",(int)[postData length]];
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    request.timeoutInterval=60.0f;
-    [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",delegate. SER,link]]];
-    [request setHTTPMethod:@"POST"];
-    [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
-    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setHTTPBody:postData];
-    
-    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-    operation.responseSerializer = [AFJSONResponseSerializer serializer];
-    
-    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"respose:%@",responseObject);
-        NSMutableDictionary *returnDict=responseObject;
-        self.view.userInteractionEnabled = YES;
-        
-        if (returnDict != nil && returnDict != (id)[NSNull null]) {
-            delegate.productDict = returnDict;
-            if (![[[returnDict valueForKey:@"data"]valueForKey:@"SearchObjectList"]count]==0) {
-                
-                ProductViewController *prodObj=[[ProductViewController alloc]init];
-                [self.navigationController pushViewController:prodObj animated:YES];
-                
-            }else{
-                
-                UIAlertView *alrView=[[UIAlertView alloc]initWithTitle:@"Alert" message:@"selected item details not available" delegate:self cancelButtonTitle:@"DISMISS" otherButtonTitles:nil, nil];
-                [alrView show];
-            }
-            
-        }
-        [tableView reloadData];
-        [indicatorView stopAnimating];
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        
-        NSLog(@"Connected Failed:%@",error.localizedDescription);
-        self.view.userInteractionEnabled=YES;
-        UIAlertView *alertObj = [[UIAlertView alloc]initWithTitle:@"Alert" message:error.localizedDescription delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-        [alertObj show];
-        [indicatorView stopAnimating];
-    }];
-    
-    [operation start];
-    
+    NSString *link = [NSString stringWithFormat:@"%@POSMClient/json/process/execute/ProductSearch",[[NSUserDefaults standardUserDefaults] objectForKey:@"SERVERURL"]];
+
+    [activityIndicator showActivityIndicator];
+    [CommonWebServices postMethodWithUrl:link dictornay:data onSuccess:^(id responseObject)
+     {
+         [activityIndicator hideActivityIndicator];
+         
+         if ([CommonWebServices isWebResponseNotEmpty:responseObject])
+         {
+             if ([responseObject isKindOfClass:[NSDictionary class]])
+             {
+             }
+             else
+             {
+             }
+         }
+         
+     } onFailure:^(NSError *error)
+     {
+         [activityIndicator hideActivityIndicator];
+         NSLog(@"Error Received : %@", error.localizedDescription);
+         
+     }];
+
+   
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{

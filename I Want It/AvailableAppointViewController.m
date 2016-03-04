@@ -9,24 +9,23 @@
 #import "AvailableAppointViewController.h"
 
 @interface AvailableAppointViewController (){
-  
+    
     UITextField *zipTxt;
     UITextView *reasonTxt;
     UIButton *backBtn,*addBtn,*sideMenuBtn,*findNearBtn,*nextBtn,*creatApptBtn,*dateBtn,*closeBtn,*temBtn,*zipSearBtn;
     UILabel *titleLbl,*reasonBtnLbl,*dateBtnLbl;
-    int selectedIndex;
+    NSInteger selectedIndex;
     UITableView *appTimeTblView;
     UIColor *backColor,*maxColor,*textColor,*titColor,*lineColor,*borderColor,*titBackcolor,*btnColor;
     UIScrollView *scrollView;
     UIView *view,*view2section,*view3,*pickerView, *view4section;
-   
+    
     UIPickerView *myPickerView;
     NSArray *pickerArray,*reasonArray, *timeArr;
-    int picker_num;
+    NSInteger picker_num;
     UIDatePicker *dateObj;
-    UIActivityIndicatorView *indicatorView;
     BOOL btnSelected;
-
+    
 }
 
 @end
@@ -41,8 +40,17 @@
     {
         self.edgesForExtendedLayout =UIRectEdgeNone;
     }
-
+    
     delegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    activityIndicator = [[ActivityIndicatorController alloc] init];
+    [activityIndicator initWithViewController:self.navigationController];
+
+    APIservice = [[CommonWebServices alloc] init];
+    APIservice.delegate = self;
+    APIservice.activityIndicator = activityIndicator;
+    
+    
     btnSelected=YES;
     selectedIndex = 0;
     picker_num = 0;
@@ -51,11 +59,10 @@
     textColor = [UIColor whiteColor];
     titColor = [UIColor colorWithRed:51.0f/255.0f green:51.0f/255.0f blue:51.0f/255.0f alpha:1];
     titBackcolor = [UIColor colorWithRed:33.0f/255.0f green:66.0f/255.0f blue:99.0f/255.0f alpha:1];
-
+    
     lineColor = [UIColor colorWithRed:212.0f/255.0f green:212.0f/255.0f blue:212.0f/255.0f alpha:1];
     borderColor = [UIColor colorWithRed:228.0f/255.0f green:228.0f/255.0f blue:228.0f/255.0f alpha:1];
     btnColor = [UIColor colorWithRed:200.0f/255.0f green:239.0f/255.0f blue:255.0f/255.0f alpha:1];
-
     
     pickerArray = [[NSArray alloc]initWithObjects:
                    @[@"OvcStore",@"+81 1988 3600",@"Waseda Dori"],
@@ -65,14 +72,14 @@
     
     reasonArray = [[NSArray alloc]initWithObjects:@"Training",
                    @"Consultation",@"Repair",@"Personal Shopping", nil];
-
+    
     timeArr = [[NSArray alloc]initWithObjects:@"09:30 to 10:30",@"10:30 to 11:30",@"11:30 to 12:30",@"12:30 to 13:30",@"13:30 to 14:30",@"14:30 to 15:30",@"15:30 to 16:30",@"16:30 to 17:30",@"17:30 to 18:30",@"18:30 to 19:30",@"19:30 to 20:30",@"20:30 to 21:30", nil];
     
     NSString *timeStr = [timeArr objectAtIndex:0];
     NSArray *tempArr = [timeStr componentsSeparatedByString:@" to "];
     startTime = [tempArr objectAtIndex:0];
     endTime = [tempArr objectAtIndex:1];
-
+    
     
     sideMenuBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     sideMenuBtn.frame = CGRectMake(0,0,40,64);
@@ -114,20 +121,20 @@
     zipLbl.text = @"  Postcode / Town";
     zipLbl.font = [UIFont fontWithName:@"Kailasa" size:14.0];
     [view addSubview:zipLbl];
-
+    
     UIView *zipView = [[UIView alloc]init];
     zipView.backgroundColor = [UIColor whiteColor];
     zipView.layer.borderColor = [borderColor CGColor];
     zipView.layer.borderWidth = 0.5f;
     [view addSubview:zipView];
-
+    
     zipTxt = [[UITextField alloc]init];
     zipTxt.delegate = self;
     zipTxt.backgroundColor = [UIColor clearColor];
     zipTxt.placeholder = @"Enter zip code";
     zipTxt.font = [UIFont fontWithName:@"Kailasa" size:14.0];
     [zipView addSubview:zipTxt];
-   
+    
     zipSearBtn = [[UIButton alloc]init];
     [zipSearBtn setTitle:@"SEARCH" forState:UIControlStateNormal];
     zipSearBtn.layer.cornerRadius = 5.0f;
@@ -136,7 +143,7 @@
     [zipSearBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [zipSearBtn addTarget:self action:@selector(findBtnAct) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:zipSearBtn];
-
+    
     UIView *dummy_Line_view3 = [[UILabel alloc]init];
     dummy_Line_view3.backgroundColor = maxColor;
     [view addSubview:dummy_Line_view3];
@@ -171,8 +178,8 @@
     
     findNearBtn.frame = CGRectMake(10, dummyLbl.frame.origin.y + dummyLbl.frame.size.height+20, 300, 46);
     findNearImgLbl.frame = CGRectMake(35, 10, 21, 26);
-
-//    ---------------- Select Store--------------
+    
+    //    ---------------- Select Store--------------
     
     view2section = [[UIView alloc]init];
     view2section.backgroundColor = backColor;
@@ -195,14 +202,14 @@
     storeCollectionView.backgroundColor = [UIColor clearColor];
     [storeCollectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"cellIdentifier"];
     [view2section addSubview:storeCollectionView];
-
+    
     view2section.frame = CGRectMake(0,view.frame.origin.y+view.frame.size.height-15,320,235);
     storeLbl.frame = CGRectMake(0, 0, 320, 35);
     storeCollectionView.frame = CGRectMake(5, storeLbl.frame.origin.y+storeLbl.frame.size.height - 0.5f, 310, 200);
     
-   
-//    -------- Scedule appointment------------
-
+    
+    //    -------- Scedule appointment------------
+    
     view4section = [[UIView alloc]init];
     view4section.backgroundColor = backColor;
     [scrollView addSubview:view4section];
@@ -214,7 +221,7 @@
     reasonLbl.font = [UIFont fontWithName:@"Kailasa" size:14.0];
     reasonLbl.backgroundColor = titBackcolor;
     [view4section addSubview:reasonLbl];
-
+    
     UIButton *reasonBtn = [[UIButton alloc]init];
     reasonBtn.backgroundColor = [UIColor whiteColor];
     reasonBtn.layer.borderColor = [borderColor CGColor];
@@ -275,7 +282,7 @@
     view3.backgroundColor = backColor;
     view3.hidden = YES;
     [scrollView addSubview:view3];
-
+    
     UILabel *wishLbl = [[UILabel alloc]init];
     wishLbl.text = @"  When do you want to come in ?";
     wishLbl.textColor = titColor;
@@ -303,13 +310,13 @@
     
     dateBtnLbl = [[UILabel alloc]init];
     dateBtnLbl.backgroundColor = [UIColor clearColor];
-   
+    
     NSDate *date =[NSDate date];
     NSDateFormatter *df = [[NSDateFormatter alloc] init];
     df.dateStyle = NSDateFormatterMediumStyle;
     [df setDateFormat:@"dd MMM yyyy"];
     dateBtnLbl.text=[df stringFromDate:date];
-
+    
     dateBtnLbl.textColor = [UIColor lightGrayColor];
     dateBtnLbl.font = [UIFont fontWithName:@"Kailasa" size:14.0];
     [dateBtn addSubview:dateBtnLbl];
@@ -331,7 +338,7 @@
     appTimeTblView.delegate = self;
     appTimeTblView.dataSource = self;
     [view3 addSubview:appTimeTblView];
-
+    
     creatApptBtn = [[UIButton alloc]init];
     [creatApptBtn setTitle:@"CREATE APPOINTMENT" forState:UIControlStateNormal];
     creatApptBtn.layer.cornerRadius = 5.0f;
@@ -340,21 +347,21 @@
     [creatApptBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [creatApptBtn addTarget:self action:@selector(createBtnAct) forControlEvents:UIControlEventTouchUpInside];
     [view3 addSubview:creatApptBtn];
-
+    
     view3.frame = CGRectMake(0, view4section.frame.size.height + view4section.frame.origin.y, 320, 410);
     wishLbl.frame = CGRectMake(0, 0, 320, 45);
     dateLbl.frame = CGRectMake(0, wishLbl.frame.origin.y + wishLbl.frame.size.height, 320, 35);
-
+    
     dateBtn.frame = CGRectMake(0, dateLbl.frame.origin.y + dateLbl.frame.size.height ,320, 35);
     dateBtnLbl.frame = CGRectMake(10, 0, 300, 35);
     dateImgIcon.frame = CGRectMake(290, 10, 15, 17);
-   
+    
     timeLbl.frame = CGRectMake(0, dateBtn.frame.origin.y + dateBtn.frame.size.height,320, 35);
-   
+    
     appTimeTblView.frame = CGRectMake(0, timeLbl.frame.size.height + timeLbl.frame.origin.y, 320, 200);
     creatApptBtn.frame = CGRectMake(70, appTimeTblView.frame.origin.y + appTimeTblView.frame.size.height+10, 180, 45);
     
-//    ------------ Picker View------------------
+    //    ------------ Picker View------------------
     
     pickerView = [[UIView alloc]init];
     pickerView.backgroundColor = [UIColor lightGrayColor];
@@ -386,7 +393,7 @@
     [dateObj addTarget:self action:@selector(dateChang:) forControlEvents:UIControlEventValueChanged];
     dateObj.hidden=YES;
     [pickerView addSubview:dateObj];
-
+    
     
     if (IS_IPHONE4) {
         scrollView.frame = CGRectMake(0,0,320,480);
@@ -400,12 +407,11 @@
         pickerView.frame = CGRectMake(0,327,320,246);
         myPickerView.frame = CGRectMake(0,30,320,216);
         dateObj.frame=CGRectMake(0,30,320,216);
-
+        
     }
 }
 
 -(void)viewWillAppear:(BOOL)animated{
-    
     titleLbl = [[UILabel alloc]init];
     titleLbl.frame = CGRectMake(0,0,200,44);
     titleLbl.font = [UIFont fontWithName:@"Kailasa" size:18.0];
@@ -414,9 +420,6 @@
     titleLbl.textAlignment = NSTextAlignmentCenter;
     [titleLbl sizeToFit];
     self.navigationItem.titleView = titleLbl;
-   
-    
-    
 }
 
 -(void)backBtnAct{
@@ -432,17 +435,15 @@
         [self.navigationController popViewControllerAnimated:YES];
     }else{
         [self.navigationController popViewControllerAnimated:YES];
-
+        
     }
 }
 
 - (void)menuBtnAction {
-    
     [self.menuContainerViewController toggleLeftSideMenuCompletion:nil];
 }
 
 #pragma mark-Tableview
-
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
 }
@@ -451,8 +452,7 @@
     return 10;
 }
 
--(float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return 46;
 }
 
@@ -468,15 +468,15 @@
     cell.backgroundColor=[UIColor colorWithRed:216.0f/255.0f green:216.0f/255.0f blue:216.0f/255.0f alpha:216.0f/255.0f];
     
     [[cell.contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
-
+    
     UIView *AppointBackView = [[UIView alloc]init];
     AppointBackView.frame = CGRectMake(0, 0, 320,45);
     AppointBackView.backgroundColor = [UIColor colorWithRed:243.0f/255.0f green:243.0f/255.0f blue:243.0f/255.0f alpha:1];
-
+    
     
     UIImageView *radioBtn = [[UIImageView alloc]init];
     radioBtn.userInteractionEnabled = YES;
-
+    
     if (selectedIndex == indexPath.row) {
         radioBtn.image = [UIImage imageNamed:@"radiobtn_selbtn"];
     }else{
@@ -495,19 +495,18 @@
     dateLbl.font = [UIFont fontWithName:@"Kailasa" size:12.0];
     [AppointBackView addSubview:dateLbl];
     [cell addSubview:AppointBackView];
-
+    
     return cell;
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-  
     selectedIndex = indexPath.row;
     NSString *timeStr = [timeArr objectAtIndex:indexPath.row];
     NSArray *tempArr = [timeStr componentsSeparatedByString:@" to "];
     startTime = [tempArr objectAtIndex:0];
     endTime = [tempArr objectAtIndex:1];
     scrollView.contentSize=CGSizeMake(320,view4section.frame.origin.y+view4section.frame.size.height+self.view.frame.size.height+200);
-
+    
     NSLog(@"startTime: %@, endTime: %@",startTime,endTime);
     [appTimeTblView reloadData];
 }
@@ -566,7 +565,7 @@
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     return CGSizeMake(150, 90);
-
+    
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
@@ -575,7 +574,7 @@
     scrollView.contentSize=CGSizeMake(320,view4section.frame.origin.y+view4section.frame.size.height+10);
     if (IS_IPHONE4) {
         scrollView.contentSize=CGSizeMake(320,view4section.frame.origin.y+view4section.frame.size.height+100);
-
+        
         [UIView animateWithDuration:0.55 animations:^{scrollView.contentOffset=CGPointMake(0,view2section.frame.origin.y+view2section.frame.size.height);}];
         
     }else{
@@ -585,10 +584,10 @@
 }
 
 -(void)findBtnAct{
-
+    
     [zipTxt resignFirstResponder];
     [reasonTxt resignFirstResponder];
-
+    
     findNearBtn.alpha = 0.6f;
     zipSearBtn.alpha = 0.6f;
     findNearBtn.userInteractionEnabled=NO;
@@ -597,16 +596,16 @@
     scrollView.contentSize = CGSizeMake(320,view2section.frame.origin.y+view2section.frame.size.height+20);
     
     if (IS_IPHONE4) {
-       
+        
         scrollView.contentSize = CGSizeMake(320,view2section.frame.origin.y+view2section.frame.size.height+100);
-
+        
         [UIView animateWithDuration:0.55 animations:^{
             
             scrollView.contentOffset=CGPointMake(0,view.frame.origin.y+view.frame.size.height);
         }];
         
     }else{
-      
+        
         [UIView animateWithDuration:0.55 animations:^{
             
             scrollView.contentOffset=CGPointMake(0,view.frame.origin.y+view.frame.size.height-100);
@@ -617,13 +616,13 @@
 -(void)nextAct{
     [zipTxt resignFirstResponder];
     [reasonTxt resignFirstResponder];
-
+    
     nextBtn.alpha = 0.6f;
     view3.hidden = NO;
     scrollView.contentSize = CGSizeMake(320,view3.frame.origin.y+view3.frame.size.height+20);
     if (IS_IPHONE4) {
         scrollView.contentSize = CGSizeMake(320,view3.frame.origin.y+view3.frame.size.height+100);
-
+        
         [UIView animateWithDuration:0.55 animations:^{scrollView.contentOffset=CGPointMake(0,view4section.frame.origin.y+view4section.frame.size.height);}];
     }else{
         
@@ -637,18 +636,12 @@
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Title" message:@"Enter Reason" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert show];
     }else{
-        indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-        [indicatorView startAnimating];
-        [indicatorView setCenter:CGPointMake(320/2-5,320/2-5)];
-        [self.view addSubview:indicatorView];
-
         [self addAppoinmentApi];
     }
 }
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     if (alertView.tag == 10) {
         if (buttonIndex == 0) {
-            
             [self saveAct];
         }
     }
@@ -658,101 +651,110 @@
 
 - (void)addAppoinmentApi{
     /*
-     http://demoqa.ovcdemo.com:8080/POSMClient/json/process/execute/CreateAppointment
+     http://ibmwcs.ovcdemo.com:8080/json/process/execute/CreateAppointment
      
-     Request payload:
+     Create Appointment :
      {
-     "username": "eCommerce",
-     "password": "changeme",
-     "deviceId": "dUUID",
-     "source": "external",
-     "data":{"appointmentObj":{"startTime":"10:00","apptDate":"2014-04-20","status":"New","email":"customer@emailaddress.com","loyaltyId":"customer@emailaddress.com","description":"appointment description string","locationId":"OvcStore","retailerId":"defaultRetailer","reason":"Consultation","endTime":"10:30"}}
-     
-     
-     Response:
-     {"data":{   "appointmentId":"4bee9056-e457-4c0a-9687-1540d49d9708"   }}
-     */
-
-    self.view.userInteractionEnabled=NO;
+     "appointmentObj":{
+     "status":"New",
+     "startTime":"13:00:00",
+     "apptDate":"2016-01-13",
+     "email":"abhijit@oneviewcommerce.com",
+     "loyaltyId":"abhijit@oneviewcommerce.com",
+     "loyaltyFName":"Abhijit",
+     "loyaltyLName":"killedar",
+     "description":"aa",
+     "locationId":"OvcStore",
+     "retailerId":"defaultRetailer",
+     "reason":"Personal Shopping",
+     "endTime":"13:20:00"
+     },
+     "appointmentItemList":[
+     {
+     "sku":"300026672"
+     }
+     ],
+     "ovclid":"abhijit@oneviewcommerce.com"
+     }*/
     
     NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
     [dateFormat setDateFormat:@"dd MMM yyyy"];
     NSDate *date = [dateFormat dateFromString:dateBtnLbl.text];
     [dateFormat setDateFormat:@"YYYY-MM-dd"];
     dateStr = [dateFormat stringFromDate:date];
-
-    NSMutableDictionary *appointObj=[NSMutableDictionary dictionaryWithObjectsAndKeys:startTime,@"startTime",
-                                     dateStr,@"apptDate",
-                                     @"New",@"status",
-                                     [[NSUserDefaults standardUserDefaults] stringForKey:@"userMail"],@"email",
-                                     [[NSUserDefaults standardUserDefaults] stringForKey:@"userMail"],@"loyaltyId",
-                                     reasonTxt.text,@"description",
-                                     @"OvcStore",@"locationId",
-                                     @"demoRetailer",@"retailerId",
-                                     reasonBtnLbl.text,@"reason",
-                                     endTime,@"endTime",
-                                    nil];
     
-    NSMutableDictionary *userData;
-    NSLog(@"delegate.productId :%@",delegate.productId);
+    NSDictionary *userDetail = [[NSUserDefaults standardUserDefaults] objectForKey:USERDETAIL];
+
+    NSMutableDictionary *appointmentObjDict = [[NSMutableDictionary alloc]init];
+    [appointmentObjDict setValue:@"New" forKey:@"status"];
+    [appointmentObjDict setValue:startTime forKey:@"startTime"];
+    [appointmentObjDict setValue:dateStr forKey:@"apptDate"];
+    [appointmentObjDict setValue:[userDetail valueForKey:@"email"] forKey:@"email"];
+    [appointmentObjDict setValue:[userDetail valueForKey:@"loyaltyId"] forKey:@"loyaltyId"];
+    [appointmentObjDict setValue:[userDetail valueForKey:@"firstName"] forKey:@"loyaltyFName"];
+    [appointmentObjDict setValue:[userDetail valueForKey:@"lastName"] forKey:@"loyaltyLName"];
+    [appointmentObjDict setValue:reasonTxt.text forKey:@"description"];
+    [appointmentObjDict setValue:@"OvcStore" forKey:@"locationId"];
+    [appointmentObjDict setValue:@"defaultRetailer" forKey:@"retailerId"];
+    [appointmentObjDict setValue:reasonBtnLbl.text forKey:@"reason"];
+    [appointmentObjDict setValue:endTime forKey:@"endTime"];
+    [appointmentObjDict setValue:reasonTxt.text forKey:@"description"];
+    
+    NSMutableDictionary *productDict;
+    NSArray *productArray;
+    delegate.productId = @"delete";
     if ([delegate.productId isEqualToString:@""]) {
-        userData = [NSMutableDictionary dictionaryWithObjectsAndKeys:appointObj,@"appointmentObj",nil];
-
+        
     }else{
-        NSMutableDictionary *sku=[[NSMutableDictionary alloc]initWithObjectsAndKeys:delegate.productId,@"sku", nil];
-        NSMutableArray *dumyArr=[[NSMutableArray alloc]init];
-        [dumyArr addObject:sku];
-        userData = [NSMutableDictionary dictionaryWithObjectsAndKeys:appointObj,@"appointmentObj",dumyArr,@"appointmentItemList",nil];
-
+        productDict = [[NSMutableDictionary alloc]initWithObjectsAndKeys:@"1312564",@"sku", nil];
+        productArray = [[NSArray alloc]initWithObjects:productDict, nil];
     }
     
-    NSMutableDictionary *data = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"eCommerce",@"username",@"changeme",@"password",@"dUUID",@"deviceId",@"external",@"source",userData,@"data",nil];
-    NSString *link=@"POSMClient/json/process/execute/CreateAppointment";
+    NSMutableDictionary *data = [[NSMutableDictionary alloc]init];
+    [data setValue:appointmentObjDict forKey:@"appointmentObj"];
+    [data setValue:productArray forKey:@"appointmentItemList"];
+    [data setValue:[userDetail valueForKey:@"loyaltyId"] forKey:@"ovclid"];
     
-    NSData *postData=[NSJSONSerialization dataWithJSONObject:data options:NSJSONWritingPrettyPrinted error:nil];
-    NSString *postLength = [NSString stringWithFormat:@"%d",(int)[postData length]];
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",delegate.SER,link]]];
-    [request setHTTPMethod:@"POST"];
-    [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
-    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setHTTPBody:postData];
+    [activityIndicator showActivityIndicator];
     
-    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-    operation.responseSerializer = [AFJSONResponseSerializer serializer];
-    
-    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"respose:%@",responseObject);
-        NSMutableDictionary *returnDict=responseObject;
+    [APIservice createAppointmentWithCompletionBlock:^(NSDictionary *resultDic) {
+        [activityIndicator hideActivityIndicator];
         
-        if ([[returnDict objectForKey:@"errorCode"]isEqualToString:@"InternalError"]) {
-            UIAlertView *alrView=[[UIAlertView alloc]initWithTitle:@"Error" message:@"Can't Create Appointment" delegate:self cancelButtonTitle:@"Retry" otherButtonTitles:nil, nil];
-            [alrView show];
-        }else{
-            [indicatorView stopAnimating];
-            UIAlertView *alrView=[[UIAlertView alloc]initWithTitle:@"Appointment Confirmation" message:[NSString stringWithFormat:@"Congratulation ! Your appointment at the OvcStore , Store address was successfully Scheduled for %@ \n %@ to %@",dateStr,startTime,endTime] delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-            alrView.tag = 10;
-            [alrView show];
+        if ([CommonWebServices isWebResponseNotEmpty:resultDic])
+        {
+            if ([resultDic isKindOfClass:[NSDictionary class]])
+            {
+                if ([[resultDic objectForKey:@"errorCode"]isEqualToString:@"InternalError"]) {
+                    UIAlertView *alrView=[[UIAlertView alloc]initWithTitle:@"Error" message:@"Can't Create Appointment" delegate:self cancelButtonTitle:@"Retry" otherButtonTitles:nil, nil];
+                    [alrView show];
+                }else{
+                    UIAlertView *alrView=[[UIAlertView alloc]initWithTitle:@"Appointment Confirmation" message:[NSString stringWithFormat:@"Congratulation ! Your appointment at the OvcStore , Store address was successfully Scheduled for %@ \n %@ to %@",dateStr,startTime,endTime] delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                    alrView.tag = 10;
+                    [alrView show];
+                }
+                
+            }else{
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error Inserting Data"
+                                                                    message:nil
+                                                                   delegate:nil
+                                                          cancelButtonTitle:@"Ok"
+                                                          otherButtonTitles:nil];
+                [alertView show];
+                
+            }
         }
-        self.view.userInteractionEnabled=YES;
         
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        
-        // 4
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error Inserting Data"
+    } failureBlock:^(NSError *error) {
+        [activityIndicator hideActivityIndicator];
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil
                                                             message:[error localizedDescription]
                                                            delegate:nil
                                                   cancelButtonTitle:@"Ok"
                                                   otherButtonTitles:nil];
         [alertView show];
-    }];
+    } dataDict:data];
     
-    // 5
-    [operation start];
-
-   
     
-
 }
 
 
@@ -766,12 +768,12 @@
     zipSearBtn.alpha = 1.0f;
     nextBtn.alpha = 1.0f;
     scrollView.contentSize = CGSizeMake(320, view.frame.origin.y + view.frame.size.height+10);
-
+    
     return YES;
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
-   
+    
     creatApptBtn.alpha=1.0f;
     [textField resignFirstResponder];
     return YES;
@@ -814,18 +816,18 @@
 - (void) pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
     
     
-        reasonBtnLbl.text=[NSString stringWithFormat:@"%@",[reasonArray objectAtIndex:row]];
+    reasonBtnLbl.text=[NSString stringWithFormat:@"%@",[reasonArray objectAtIndex:row]];
 }
 
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component{
     
-        return [reasonArray objectAtIndex:row];
+    return [reasonArray objectAtIndex:row];
 }
 
 
 #pragma mark- Function
 -(void)pickerAct:(UIButton *)Btn{
-   
+    
     if (btnSelected==YES) {
         dateObj.hidden=YES;
         myPickerView.hidden=NO;
@@ -836,16 +838,16 @@
         myPickerView.hidden=YES;
         pickerView.hidden=YES;
         btnSelected=YES;
- 
+        
     }
     
 }
 
 -(void)dateAct{
-  
-   
+    
+    
     if (btnSelected==YES) {
-       
+        
         pickerView.hidden=NO;
         dateObj.hidden=NO;
         btnSelected=NO;
@@ -856,7 +858,7 @@
         btnSelected=YES;
         
     }
-   
+    
     
 }
 
@@ -873,10 +875,8 @@
 }
 
 -(void)saveAct{
-    
     AppointmentViewController *appViewObj=[[AppointmentViewController alloc]init];
     [self.navigationController pushViewController:appViewObj animated:YES];
-
 }
 -(void)viewWillDisappear:(BOOL)animated{
     
@@ -890,7 +890,7 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-
+    
 }
 
 @end
