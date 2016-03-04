@@ -4,9 +4,9 @@
 # PROVISIONING_DIR
 # OUTPUT_DIR : The script deletes this directory. Put something innocuous for this.
 
-PROJECT_NAME=IWantIt
+PROJECT_NAME="I Want It"
 TOP="$( cd "$(dirname "${0}")" && pwd)"
-APP_DIR="${TOP}"/"${PROJECT_NAME}"
+APP_DIR="${TOP}"
 WWW_DIR="${TOP}/lib/www"
 PLIST="${APP_DIR}"/"${PROJECT_NAME}"/"${PROJECT_NAME}"-Info.plist
 VERSION=$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" "${PLIST}")
