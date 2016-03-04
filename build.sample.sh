@@ -70,7 +70,7 @@ echo "the ident ${UNIQUE_MOBILE_PROVISION_ID}"
 
 # Build the App
 cd "${APP_DIR}"
-xcodebuild -scheme "${PROJECT_NAME}" -target "${PROJECT_NAME}" -archivePath "${XCARCHIVE}" archive PROVISIONING_PROFILE="${UNIQUE_MOBILE_PROVISION_ID}" CODE_SIGN_IDENTITY="${SIGNING_ID}"
+xcodebuild -scheme "${PROJECT_NAME}" -workspace "${PROJECT_NAME}.xcworkspace" -archivePath "${XCARCHIVE}" archive PROVISIONING_PROFILE="${UNIQUE_MOBILE_PROVISION_ID}" CODE_SIGN_IDENTITY="${SIGNING_ID}"
 
 check_process "Cannot proceed with a failed build" 1
 
