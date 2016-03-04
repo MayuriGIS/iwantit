@@ -76,7 +76,7 @@ check_process "Cannot proceed with a failed build" 1
 
 
 # Export IPA
-xcrun -sdk iphoneos PackageApplication -v "${OUTPUT_DIR}/POSMClient.xcarchive/Products/Applications/POSMClient.app" -o "${IPA_NAME}"
+xcrun -sdk iphoneos PackageApplication -v "${OUTPUT_DIR}/${PROJECT_NAME}.xcarchive/Products/Applications/${PROJECT_NAME}.app" -o "${IPA_NAME}"
 
 check_process "Error creating .ipa file" 1
 
