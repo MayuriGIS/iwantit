@@ -47,7 +47,7 @@ echo "Building version ${VERSION}, build number ${1}"
 echo $"################################################\n"
 
 # Change build number and app name
-APP_NAME_WITH_VERSION="OVC | V${VERSION}"
+APP_NAME_WITH_VERSION="IWI | V${VERSION}"
 /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${VERSION}.${1}" "${PLIST}"
 /usr/libexec/PlistBuddy -c "Set :CFBundleDisplayName ${APP_NAME_WITH_VERSION}" "${PLIST}"
 
