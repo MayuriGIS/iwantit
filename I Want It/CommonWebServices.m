@@ -192,6 +192,12 @@
     [self sendPostWebserviceRequestWithCompletionBlock:completion failureBlock:failure urlString:urlString postData:dataDict];
 }
 
+- (void)createNotificationCustomerArrivalWithCompletionBlock:(void (^) (NSDictionary *)) completion failureBlock:(void (^) (NSError *))failure dataDict:(NSDictionary *)dataDict{
+    NSString *urlString = [NSString stringWithFormat:@"%@json/process/execute/NotifyCustomerArrival",[CommonWebServices serverName]];
+    [self sendPostWebserviceRequestWithCompletionBlock:completion failureBlock:failure urlString:urlString postData:dataDict];
+}
+
+
 +(NSString *)serverName{
     NSString *url;
     if ([[NSUserDefaults standardUserDefaults]objectForKey:SERVERNAME]) {

@@ -42,8 +42,7 @@ typedef void (^JSONWebserviceFailureBlock) (NSError *error);
 
 - (void) createAppointmentWithCompletionBlock:(void (^) (NSDictionary *)) completion failureBlock:(void (^) (NSError *))failure dataDict:(NSDictionary *)dataDict;
 
-
-
+- (void) createNotificationCustomerArrivalWithCompletionBlock:(void (^) (NSDictionary *)) completion failureBlock:(void (^) (NSError *))failure dataDict:(NSDictionary *)dataDict;
 
 
 

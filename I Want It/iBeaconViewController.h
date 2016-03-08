@@ -8,9 +8,15 @@
 
 #import <UIKit/UIKit.h>
 #import "MFSideMenu.h"
-
-@interface iBeaconViewController : UIViewController
-
+@interface iBeaconViewController : UIViewController{
+    UILabel *warnLbl;
+    UIView *beconView;
+    CommonWebServices *APIservice;
+    ActivityIndicatorController *activityIndicator;
+    NSString *beconUID;
+    NSTimer *timer;
+}
+@property (nonatomic, strong) UISwitch *beconSwitch;
 
 @end
 

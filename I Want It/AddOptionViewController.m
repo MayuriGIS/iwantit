@@ -125,9 +125,7 @@
             [self.menuContainerViewController setMenuState:MFSideMenuStateClosed];
         }
     }else if (indexPath.row == 1){
-        
         delegate.popUpEnable=NO;
-
         if ([delegate.naviPath isEqualToString:@"scanView"] || [delegate.naviPath isEqualToString:@"searchView"]){
             
             NSMutableArray *shopperArr;
@@ -189,17 +187,11 @@
             }
         }
     }else if (alertView.tag==103){
-       
         NSLog(@"%@",delegate.naviPath);
-        
         if ([delegate.naviPath isEqualToString:@"searchView"]) {
-            
             [self.navigationController popViewControllerAnimated:YES];
-            
         }
-        
     }
-    
 }
 
 -(void)addWishListApi:(NSMutableDictionary *)productDict{

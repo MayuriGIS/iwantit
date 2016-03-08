@@ -104,6 +104,7 @@
     if (indexPath.row==0) {
         
         iBeaconViewController *searchObj = [[iBeaconViewController alloc] init];
+       
         UINavigationController *navigationController = self.menuContainerViewController.centerViewController;
         NSArray *controllers = [NSArray arrayWithObject:searchObj];
         navigationController.viewControllers = controllers;

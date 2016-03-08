@@ -17,7 +17,6 @@
     NSMutableArray *wishListArray;
     NSIndexPath * selIndexPath;
     NSString *productId,*itemId;
-
 }
 
 @end
@@ -105,9 +104,9 @@
     [productDit setValue:@"http://ecx.images-amazon.com/images/I/610R%2B6uESPL._SL1000_.jpg" forKey:@"image"];
     [productDit setValue:@"Canon EOS 1200D 18MP Digital SLR Camera (Black) with 18-55mm and 55-250mm IS II Lens,8GB card and Carry Bag" forKey:@"description"];
     [productDit setValue:@"25,340.00" forKey:@"amount"];
-    
+//    [wishListArray addObject:productDit];
+
     tableView.hidden = NO;
-    [wishListArray addObject:productDit];
     [tableView reloadData];
 
 }
@@ -316,11 +315,9 @@
 - (void)tableView:(UITableView *)tableView1 didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
     if (isShow) {
-        
         self.menuContainerViewController.panMode = MFSideMenuPanModeDefault;
         selectedBtnIndex = indexPath.row;
         [tableView reloadData];
-        
     }else{
         
         apiAction = 1;
@@ -358,16 +355,13 @@
         
     }else if (gestureRecognizer.direction == UISwipeGestureRecognizerDirectionRight){
         if (isShow) {
-            
             self.menuContainerViewController.panMode = MFSideMenuPanModeNone;
             UITableViewCell *cell = (UITableViewCell *)gestureRecognizer.view;
             NSIndexPath* indexPath1 = [tableView indexPathForCell:cell];
             selectedBtnIndex = (int)indexPath1.row;
             [tableView reloadData];
             self.menuContainerViewController.panMode = MFSideMenuPanModeDefault;
-            
         }else{
-            
             self.menuContainerViewController.panMode = MFSideMenuPanModeDefault;
         }
         NSLog(@"swipe right");
@@ -647,7 +641,6 @@
 }
 
 - (void)deleleApi{
-    
     productId = [[wishListArray objectAtIndex:selectedIndex]valueForKey:@"productId"];
     itemId = [[wishListArray objectAtIndex:selectedIndex]valueForKey:@"itemidx"];
     
@@ -670,11 +663,9 @@
              }
          }
          
-     } onFailure:^(NSError *error)
-     {
+     } onFailure:^(NSError *error){
          [activityIndicator hideActivityIndicator];
          NSLog(@"Error Received : %@", error.localizedDescription);
-         
      }];
 
     

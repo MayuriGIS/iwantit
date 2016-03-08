@@ -25,11 +25,6 @@
 }
 
 
-- (IBAction)button1Clicked:(id)sender
-{
-    if (self.delegate) [self.delegate summaryButtonClickedAtIndex:0];
-}
-
 - (IBAction)button2Clicked:(id)sender
 {
     if (self.okAction && [self.okAction length]) {
