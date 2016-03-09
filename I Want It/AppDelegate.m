@@ -12,7 +12,7 @@
 #import "LoginViewController.h"
 
 @implementation AppDelegate
-@synthesize userInfoArr,selectedIndex,dataBaseObj,productDict,productId,itemIdxId,proAmount,popUpEnable,isNetConnected, beaconTimer;
+@synthesize userInfoArr,selectedIndex,dataBaseObj,productDict,productId,itemIdxId,proAmount,popUpEnable,isNetConnected, beaconTimer, beaconArray;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -33,6 +33,10 @@
     
     userInfoArr = [[NSMutableArray alloc]init];
     productDict = [[NSMutableDictionary alloc]init];
+    beaconArray = [[NSMutableArray alloc] init];
+    
+    // Setup Beacon UUID, MAJOR and MINOR ID's
+    [self configuration];
     
     selectedIndex = -1;
     productId = @"";
@@ -126,5 +130,50 @@
     BOOL isReachable = flags & kSCNetworkFlagsReachable;
     BOOL needsConnection = flags & kSCNetworkFlagsConnectionRequired;
     return (isReachable && !needsConnection) ? YES : NO;
+}
+
+
+- (void)configuration{
+    // Configuration of Beacons
+    
+   /* // GIS Beacons
+    NSArray *beaconArr = @[@{@"UUID":@"F94DBB23-2266-7822-3782-57BEAC0952AC",
+                             @"name":@"mint",
+                             @"major":@"57813",
+                             @"minor":@"43675"},
+                           @{@"UUID":@"F94DBB23-2266-7822-3782-57BEAC0952AC",
+                             @"name":@"ice",
+                             @"major":@"14743",
+                             @"minor":@"60335"},
+                           @{@"UUID":@"B9407F30-F5F8-466E-AFF9-25556B57FE6D",
+                             @"name":@"blueberry",
+                             @"major":@"40841",
+                             @"minor":@"40841"}];
+    */
+    
+     // OVC Beacons
+     NSArray *beaconArr = @[@{@"UUID":@"B9407F30-F5F8-466E-AFF9-25556B57FE6D",
+                              @"name":@"mint",
+                              @"major":@"37058",
+                              @"minor":@"3093"},
+                            @{@"UUID":@"B9407F30-F5F8-466E-AFF9-25556B57FE6D",
+                              @"name":@"ice",
+                              @"major":@"34114",
+                              @"minor":@"34114"},
+                            @{@"UUID":@"B9407F30-F5F8-466E-AFF9-25556B57FE6D",
+                              @"name":@"blueberry",
+                              @"major":@"40841",
+                              @"minor":@"40841"}];
+    
+    
+    for (NSDictionary *dict in beaconArr) {
+        NSUUID *uuid = [[NSUUID alloc] initWithUUIDString:[dict objectForKey:@"UUID"]];
+        RWTItem *item = [[RWTItem alloc] initWithName:[dict objectForKey:@"name"]
+                                                 uuid:uuid
+                                                major:[[dict objectForKey:@"major"] intValue]
+                                                minor:[[dict objectForKey:@"minor"] intValue]];
+        [self.beaconArray addObject:item];
+    }
+
 }
 @end

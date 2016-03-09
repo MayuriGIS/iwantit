@@ -157,7 +157,7 @@
         [ibeacon forcetoStopMonitoring];
         
         [delegate.dataBaseObj deleteAllTables];
-        
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:isBeaconEnabled];
         [[NSUserDefaults standardUserDefaults]setBool:NO forKey:@"FirstTime"];
         
         LoginViewController *logObj=[[LoginViewController alloc]init];

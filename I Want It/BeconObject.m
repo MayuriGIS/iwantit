@@ -13,50 +13,9 @@
 #define IDLETIMER 2
 
 -(void)beconInitialization{
-    self.items = [[NSMutableArray alloc]init];
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
 
-    // Configuration of Beacons
-    
-     /*// GIS Beacons
-     NSArray *beaconArr = @[@{@"UUID":@"F94DBB23-2266-7822-3782-57BEAC0952AC",
-                              @"name":@"mint",
-                              @"major":@"57813",
-                              @"minor":@"43675"},
-                            @{@"UUID":@"F94DBB23-2266-7822-3782-57BEAC0952AC",
-                              @"name":@"ice",
-                              @"major":@"14743",
-                              @"minor":@"60335"},
-                            @{@"UUID":@"B9407F30-F5F8-466E-AFF9-25556B57FE6D",
-                              @"name":@"blueberry",
-                              @"major":@"40841",
-                              @"minor":@"40841"}];
-    */
-    
-    // OVC Beacons
-    NSArray *beaconArr = @[@{@"UUID":@"B9407F30-F5F8-466E-AFF9-25556B57FE6D",
-                             @"name":@"mint",
-                             @"major":@"37058",
-                             @"minor":@"3093"},
-                           @{@"UUID":@"B9407F30-F5F8-466E-AFF9-25556B57FE6D",
-                             @"name":@"ice",
-                             @"major":@"34114",
-                             @"minor":@"34114"},
-                           @{@"UUID":@"B9407F30-F5F8-466E-AFF9-25556B57FE6D",
-                             @"name":@"blueberry",
-                             @"major":@"40841",
-                             @"minor":@"40841"}];
-    
-    
-    for (NSDictionary *dict in beaconArr) {
-        NSUUID *uuid = [[NSUUID alloc] initWithUUIDString:[dict objectForKey:@"UUID"]];
-        RWTItem *item = [[RWTItem alloc] initWithName:[dict objectForKey:@"name"]
-                                                 uuid:uuid
-                                                major:[[dict objectForKey:@"major"] intValue]
-                                                minor:[[dict objectForKey:@"minor"] intValue]];
-        [self.items addObject:item];
-    }
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(LocationManagerAction)
@@ -107,7 +66,7 @@
     [delegate.beaconTimer invalidate];
     delegate.beaconTimer = nil;
     
-    for (RWTItem *obj in self.items) {
+    for (RWTItem *obj in delegate.beaconArray) {
         [self startMonitoringItem:obj];
     }
 }
@@ -118,7 +77,7 @@
     delegate.beaconTimer = nil;
     [self.locationManager stopUpdatingLocation];
     NSLog(@"The switch is turned off.");
-    for (RWTItem *obj in self.items) {
+    for (RWTItem *obj in delegate.beaconArray) {
         [self stopMonitoringItem:obj];
     }
 }
@@ -155,8 +114,10 @@
 - (void)locationManager:(CLLocationManager *)manager
         didRangeBeacons:(NSArray *)beacons
                inRegion:(CLBeaconRegion *)region{
+    AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+
     for (CLBeacon *beacon in beacons) {
-        for (RWTItem *item in self.items) {
+        for (RWTItem *item in delegate.beaconArray) {
             if ([item isEqualToCLBeacon:beacon]) {
                 item.lastSeenBeacon = beacon;
                 if (item.lastSeenBeacon.proximity == 1 || item.lastSeenBeacon.proximity == 2){
@@ -211,30 +172,33 @@
 }
 
 - (void)showSummaryCard:(NSDictionary *)infoDict{
-    if (!summaryCardView) {
-        summaryCardView = [[[NSBundle mainBundle] loadNibNamed:@"SummaryCardView"
-                                                         owner:self
-                                                       options:nil] firstObject];
-        summaryCardView.backgroundColor = [UIColor clearColor];
-    }
-    UIWindow* window = [UIApplication sharedApplication].keyWindow;
-    if (!window)
-        window = [[UIApplication sharedApplication].windows objectAtIndex:0];
-    [[[window subviews] objectAtIndex:0] addSubview:summaryCardView];
-    
-    summaryCardView.frame = [[UIScreen mainScreen]bounds];
-    summaryCardView.layer.masksToBounds = YES;
-    summaryCardView.delegate = self;
-    summaryCardView.titleLabel.text = [infoDict objectForKey:@"title"];
-    summaryCardView.summaryView.text = [infoDict objectForKey:@"summary"];
-    [summaryCardView.okButton setTitle:@"OK" forState:UIControlStateNormal];
-    summaryCardView.imageView.image = [UIImage imageNamed:[infoDict objectForKey:@"image"]];
-    
-    self.visibleCardView = summaryCardView;
-    [UIView animateWithDuration:0.35 animations:^{
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:isBeaconEnabled]) {
+        if (!summaryCardView) {
+            summaryCardView = [[[NSBundle mainBundle] loadNibNamed:@"SummaryCardView"
+                                                             owner:self
+                                                           options:nil] firstObject];
+            summaryCardView.backgroundColor = [UIColor clearColor];
+        }
+        UIWindow* window = [UIApplication sharedApplication].keyWindow;
+        if (!window){
+            window = [[UIApplication sharedApplication].windows objectAtIndex:0];
+        }
+        [[[window subviews] objectAtIndex:0] addSubview:summaryCardView];
+        
         summaryCardView.frame = [[UIScreen mainScreen]bounds];
-    } completion:^(BOOL finished) {
-    }];
+        summaryCardView.layer.masksToBounds = YES;
+        summaryCardView.delegate = self;
+        summaryCardView.titleLabel.text = [infoDict objectForKey:@"title"];
+        summaryCardView.summaryView.text = [infoDict objectForKey:@"summary"];
+        [summaryCardView.okButton setTitle:@"OK" forState:UIControlStateNormal];
+        summaryCardView.imageView.image = [UIImage imageNamed:[infoDict objectForKey:@"image"]];
+        
+        self.visibleCardView = summaryCardView;
+        [UIView animateWithDuration:0.35 animations:^{
+            summaryCardView.frame = [[UIScreen mainScreen]bounds];
+        } completion:^(BOOL finished) {
+        }];
+    }
 }
 
 

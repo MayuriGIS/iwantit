@@ -23,7 +23,6 @@
     
 }
 @property (weak, nonatomic) UIView *visibleCardView;
-@property (strong, nonatomic) NSMutableArray *items;
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) UIViewController *mainView;
 -(void)forcetoStopMonitoring;

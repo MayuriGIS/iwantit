@@ -17,7 +17,7 @@
 @property (strong, nonatomic) UIWindow *window;
 @property (nonatomic, strong) NSString *naviPath,*productId, *itemIdxId,*proAmount;
 @property (nonatomic, strong) DataBaseClass *dataBaseObj;
-@property (nonatomic, strong) NSMutableArray *userInfoArr;
+@property (nonatomic, strong) NSMutableArray *userInfoArr, *beaconArray;
 @property (nonatomic, strong) NSMutableDictionary *productDict;
 @property (nonatomic) int selectedIndex;
 @property (nonatomic) BOOL isNetConnected, popUpEnable;
