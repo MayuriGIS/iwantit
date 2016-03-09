@@ -42,7 +42,7 @@
     }
     
     delegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
+
     activityIndicator = [[ActivityIndicatorController alloc] init];
     [activityIndicator initWithViewController:self.navigationController];
 

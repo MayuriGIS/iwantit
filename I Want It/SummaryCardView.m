@@ -7,7 +7,7 @@
 
 #import "SummaryCardView.h"
 
-@interface SummaryCardView()
+@interface SummaryCardView()<UITextViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIView *containerView;
 
@@ -17,6 +17,7 @@
 
 - (void)setNeedsLayout
 {
+    self.summaryView.delegate = self;
     self.containerView.layer.masksToBounds = YES;
     self.containerView.layer.cornerRadius = 6.0;
     self.containerView.layer.borderColor = [UIColor colorWithWhite:1.0 alpha:1.0].CGColor;
@@ -32,6 +33,13 @@
     } else {
         if (self.delegate) [self.delegate summaryButtonClickedAtIndex:0];
     }
+}
+
+-(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
+{
+    if([text isEqualToString:@"\n"])
+        [textView resignFirstResponder];
+    return YES;
 }
 
 @end

@@ -78,8 +78,8 @@
     urlTxtfld = [[UITextField alloc]init];
     urlTxtfld.tag=10;
     urlTxtfld.delegate=self;
-    if ([[NSUserDefaults standardUserDefaults]stringForKey:@"SERVERURL"] != nil) {
-        urlTxtfld.text = [[NSUserDefaults standardUserDefaults]stringForKey:@"SERVERURL"];
+    if ([[NSUserDefaults standardUserDefaults]stringForKey:SERVERNAME] != nil) {
+        urlTxtfld.text = [[NSUserDefaults standardUserDefaults]stringForKey:SERVERNAME];
     }else{
         urlTxtfld.text = [serverArr objectAtIndex:3];
     }

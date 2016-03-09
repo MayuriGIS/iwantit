@@ -7,7 +7,7 @@
 
 #import <UIKit/UIKit.h>
 
-@protocol SummaryCardDelegate <NSObject>
+@protocol SummaryCardDelegate <NSObject,UITextViewDelegate>
 
 - (void)summaryButtonClickedAtIndex:(int)index;
 

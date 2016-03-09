@@ -270,9 +270,7 @@
 }
 
 - (void)menuBtnAction {
-
     [self.menuContainerViewController toggleLeftSideMenuCompletion:nil];
-    
 }
 -(void)backBtnAct{
     

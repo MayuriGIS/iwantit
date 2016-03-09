@@ -192,6 +192,7 @@
 }
 
 - (void)menuBtnAction {
+    self.menuContainerViewController.leftMenuWidth = 80;
     [self.menuContainerViewController toggleLeftSideMenuCompletion:nil];
 }
 
@@ -206,6 +207,7 @@
         [self.navigationController popViewControllerAnimated:YES];
 
     }else{
+        self.menuContainerViewController.leftMenuWidth = 80;
         MyWishViewController *myObj = [[MyWishViewController alloc]init];
         [self.navigationController pushViewController:myObj animated:NO];
     }
@@ -213,9 +215,10 @@
 }
 
 -(void)addBtnAct{
-    
     [addBtn setHidden:YES];
-    [self.menuContainerViewController toggleRightSideMenuCompletion:nil];
+    [self.menuContainerViewController toggleRightSideMenuCompletion:^{
+        self.menuContainerViewController.menuWidth = 60;
+    }];
 }
 
 - (void)newBtnAction{

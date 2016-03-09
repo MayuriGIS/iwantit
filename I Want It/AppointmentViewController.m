@@ -26,8 +26,9 @@
     {
         self.edgesForExtendedLayout =UIRectEdgeNone;
     }
-    
+
     apiAction=0;
+
     
     activityIndicator = [[ActivityIndicatorController alloc] init];
     [activityIndicator initWithViewController:self.navigationController];
@@ -395,9 +396,8 @@
         }
     }
 }
--(void)viewWillDisappear:(BOOL)animated{
-    
-}
+
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

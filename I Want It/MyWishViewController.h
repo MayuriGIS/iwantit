@@ -13,15 +13,15 @@
 #import "AvailableAppointViewController.h"
 
 @interface MyWishViewController : UIViewController<UITableViewDelegate,UITableViewDataSource,UIGestureRecognizerDelegate,UIAlertViewDelegate>{
+    ActivityIndicatorController *activityIndicator;
+    CommonWebServices *APIservice;
     AppDelegate *delegate;
+
     UIView *popUpView;
     UIButton *existBtn, *newBtn;
     NSInteger apiAction, selectedIndex;
-    ActivityIndicatorController *activityIndicator;
-    CommonWebServices *APIservice;
 }
 
 @property (strong,retain) UITableView *tableView;
-
 
 @end

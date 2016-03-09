@@ -22,4 +22,5 @@
 #define SERVERNAME @"severUrl"
 #define USERDETAIL @"userDetail"
 #define isBeaconView @"fromBeconViewController"
+#define isBeaconEnabled @"beaconIson"
 

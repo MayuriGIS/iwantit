@@ -98,6 +98,8 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
    
+    [tableView setContentOffset:CGPointZero animated:YES];
+
     selectedIndex = (int)indexPath.row;
     [tableView reloadData];
     
@@ -151,8 +153,13 @@
         [self.menuContainerViewController setMenuState:MFSideMenuStateClosed];
 
     }else{
+        BeconObject *ibeacon = [[BeconObject alloc]init];
+        [ibeacon forcetoStopMonitoring];
+        
         [delegate.dataBaseObj deleteAllTables];
+        
         [[NSUserDefaults standardUserDefaults]setBool:NO forKey:@"FirstTime"];
+        
         LoginViewController *logObj=[[LoginViewController alloc]init];
         UINavigationController *navigationController = self.menuContainerViewController.centerViewController;
         NSArray *controllers = [NSArray arrayWithObject:logObj];

@@ -22,5 +22,6 @@
 @property (nonatomic) int selectedIndex;
 @property (nonatomic) BOOL isNetConnected, popUpEnable;
 @property (strong, nonatomic) CLLocationManager *locationManager;
+@property (strong, nonatomic) NSTimer *beaconTimer;
 
 @end

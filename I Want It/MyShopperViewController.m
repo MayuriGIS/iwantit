@@ -360,7 +360,6 @@
     [shopperArr removeAllObjects];
     NSMutableDictionary *userData = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"shopper@ovc.com",@"loyaltyId",@"demoRetailer",@"retailerId",@"WISHLIST",@"listType",@"WishList",@"listName",nil];
     NSMutableDictionary *data = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"eCommerce",@"username",@"changeme",@"password",@"dUUID",@"deviceId",@"external",@"source",userData,@"data",nil];
-    NSString *link = [NSString stringWithFormat:@"%@POSMClient/json/process/execute/GetWishlistItems",[[NSUserDefaults standardUserDefaults] objectForKey:@"SERVERURL"]];
     
     [activityIndicator showActivityIndicator];
     [APIservice loginApiWithCompletionBlock:^(NSDictionary *resultDic) {

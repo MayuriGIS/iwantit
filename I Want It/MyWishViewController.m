@@ -8,7 +8,6 @@
 
 
 #import "MyWishViewController.h"
-
 @interface MyWishViewController (){
     NSInteger selectedBtnIndex;
     BOOL isShow;
@@ -22,7 +21,6 @@
 @end
 
 @implementation MyWishViewController
-
 @synthesize tableView;
 
 - (void)viewDidLoad {
@@ -32,7 +30,6 @@
     {
         self.edgesForExtendedLayout =UIRectEdgeNone;
     }
-    
     apiAction = 0;
     isShow = NO;
     delegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
@@ -131,6 +128,7 @@
         tableView.hidden=NO;
         [indicatorView stopAnimating];
     }*/
+    
 }
 
 - (void)menuBtnAction {
@@ -497,7 +495,6 @@
     
     [APIservice getWishListApiWithCompletionBlock:^(NSDictionary *resultDic) {
         [activityIndicator hideActivityIndicator];
-        
         if ([CommonWebServices isWebResponseNotEmpty:resultDic])
         {
             if ([resultDic isKindOfClass:[NSDictionary class]])
@@ -513,7 +510,6 @@
                 [tableView reloadData];
             }
         }
-        
     } failureBlock:^(NSError *error) {
         [activityIndicator hideActivityIndicator];
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil

@@ -11,16 +11,14 @@
 #import "AppDelegate.h"
 #import "AppointmentViewController.h"
 #import "MyWishViewController.h"
-
 @interface AvailableAppointViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,UITextViewDelegate,UITextFieldDelegate,UIPickerViewDataSource,UIPickerViewDelegate,UIAlertViewDelegate,UICollectionViewDataSource,UICollectionViewDelegate>{
     UICollectionView *storeCollectionView;
 
     AppDelegate *delegate;
-    NSString *startTime, *endTime, *dateStr;
     ActivityIndicatorController *activityIndicator;
     CommonWebServices *APIservice;
 
-
+    NSString *startTime, *endTime, *dateStr;
 }
 
 
