@@ -357,42 +357,49 @@
         {
             if ([resultDic isKindOfClass:[NSDictionary class]])
             {
-                self.view.userInteractionEnabled=NO;
                 NSLog(@"Login Return Data: %@",resultDic);
-                [delegate.userInfoArr addObjectsFromArray:[[[resultDic objectForKey:@"data"]objectForKey:@"memberList"] mutableCopy]];
-                NSMutableDictionary *userDetail = [[NSMutableDictionary alloc]init];
-                
-                if (![[[delegate.userInfoArr firstObject] valueForKey:@"email"] isEqualToString:@""]) {
-                    [userDetail setValue:[[delegate.userInfoArr firstObject] valueForKey:@"email"] forKey:@"email"];
+                if ([[[resultDic objectForKey:@"data"]objectForKey:@"memberList"] count] != 0) {
+                    [delegate.userInfoArr addObjectsFromArray:[[[resultDic objectForKey:@"data"]objectForKey:@"memberList"] mutableCopy]];
+                    NSMutableDictionary *userDetail = [[NSMutableDictionary alloc]init];
+                    
+                    if (![[[delegate.userInfoArr firstObject] valueForKey:@"email"] isEqualToString:@""]) {
+                        [userDetail setValue:[[delegate.userInfoArr firstObject] valueForKey:@"email"] forKey:@"email"];
+                    }
+                    
+                    if (![[[delegate.userInfoArr firstObject] valueForKey:@"firstName"] isEqualToString:@""]) {
+                        [userDetail setValue:[[delegate.userInfoArr firstObject] valueForKey:@"firstName"] forKey:@"firstName"];
+                    }
+                    
+                    if (![[[delegate.userInfoArr firstObject] valueForKey:@"lastName"] isEqualToString:@""]) {
+                        [userDetail setValue:[[delegate.userInfoArr firstObject] valueForKey:@"lastName"] forKey:@"lastName"];
+                    }
+                    
+                    if (![[[delegate.userInfoArr firstObject] valueForKey:@"loyaltyId"] isEqualToString:@""] ) {
+                        [userDetail setValue:[[delegate.userInfoArr firstObject] valueForKey:@"loyaltyId"] forKey:@"loyaltyId"];
+                    }
+                    
+                    if ([[delegate.userInfoArr firstObject] valueForKey:@"homePhone"] != (id) [NSNull null]) {
+                        [userDetail setValue:[[delegate.userInfoArr firstObject] valueForKey:@"homePhone"] forKey:@"homePhone"];
+                    }
+                    
+                    if ([[delegate.userInfoArr firstObject] valueForKey:@"homePhone"] != (id) [NSNull null]) {
+                        [userDetail setValue:[[delegate.userInfoArr firstObject] valueForKey:@"mobilePhone"] forKey:@"mobilePhone"];
+                    }
+                    
+                    [[NSUserDefaults standardUserDefaults] setObject:userDetail forKey:USERDETAIL];
+                    [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"FirstTime"];
+                    
+                    MyWishViewController *wishObj=[[MyWishViewController alloc]init];
+                    [self.navigationController pushViewController:wishObj animated:NO];
+                }else{
+                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil
+                                                                        message:@"User Not Found"
+                                                                       delegate:nil
+                                                              cancelButtonTitle:@"Ok"
+                                                              otherButtonTitles:nil];
+                    [alertView show];
+
                 }
-                
-                if (![[[delegate.userInfoArr firstObject] valueForKey:@"firstName"] isEqualToString:@""]) {
-                    [userDetail setValue:[[delegate.userInfoArr firstObject] valueForKey:@"firstName"] forKey:@"firstName"];
-                }
-                
-                if (![[[delegate.userInfoArr firstObject] valueForKey:@"lastName"] isEqualToString:@""]) {
-                    [userDetail setValue:[[delegate.userInfoArr firstObject] valueForKey:@"lastName"] forKey:@"lastName"];
-                 }
-                
-                if (![[[delegate.userInfoArr firstObject] valueForKey:@"loyaltyId"] isEqualToString:@""] ) {
-                    [userDetail setValue:[[delegate.userInfoArr firstObject] valueForKey:@"loyaltyId"] forKey:@"loyaltyId"];
-                }
-                
-                if ([[delegate.userInfoArr firstObject] valueForKey:@"homePhone"] != (id) [NSNull null]) {
-                    [userDetail setValue:[[delegate.userInfoArr firstObject] valueForKey:@"homePhone"] forKey:@"homePhone"];
-                }
-                
-                if ([[delegate.userInfoArr firstObject] valueForKey:@"homePhone"] != (id) [NSNull null]) {
-                    [userDetail setValue:[[delegate.userInfoArr firstObject] valueForKey:@"mobilePhone"] forKey:@"mobilePhone"];
-                }
-            
-                [[NSUserDefaults standardUserDefaults] setObject:userDetail forKey:USERDETAIL];
-                
-                [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"FirstTime"];
-                self.view.userInteractionEnabled=YES;
-                
-                MyWishViewController *wishObj=[[MyWishViewController alloc]init];
-                [self.navigationController pushViewController:wishObj animated:NO];
             }
         }
         
