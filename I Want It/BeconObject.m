@@ -16,7 +16,9 @@
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
 
-    
+    APIservice = [[CommonWebServices alloc] init];
+//    APIservice.activityIndicator = activityIndicator;
+
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(LocationManagerAction)
                                                  name:@"LocatinNotification"
@@ -123,7 +125,6 @@
                 if (item.lastSeenBeacon.proximity == 1 || item.lastSeenBeacon.proximity == 2){
                     beconUID = [NSString stringWithFormat:@"%@", item.uuid.UUIDString];
                     [self forcetoStopMonitoring];
-                    [self userRegistrationAPI];
                     NSDictionary *dict = @{@"title":@"Welcome to the “London - The Strand” Store",@"summary":@"An Associate is on the way to assist you.",@"image":@"o2image.jpg"};
                     if(!self.visibleCardView) {
                         [self showSummaryCard:dict];
@@ -210,6 +211,8 @@
     switch (index) {
         case 0:
         {
+            [self userRegistrationAPI];
+
             [UIView animateWithDuration:0.35 animations:^{
                 self.visibleCardView.frame = CGRectMake(0, self.visibleCardView.frame.size.height, self.visibleCardView.frame.size.width, self.visibleCardView.frame.size.height);
             } completion:^(BOOL finished) {
