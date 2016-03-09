@@ -10,7 +10,7 @@
 
 @implementation BeconObject
 
-#define IDLETIMER 2
+#define IDLETIMER 300
 
 -(void)beconInitialization{
     self.locationManager = [[CLLocationManager alloc] init];
