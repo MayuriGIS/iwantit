@@ -136,7 +136,7 @@
 - (void)configuration{
     // Configuration of Beacons
     
-   /* // GIS Beacons
+    /*// GIS Beacons
     NSArray *beaconArr = @[@{@"UUID":@"F94DBB23-2266-7822-3782-57BEAC0952AC",
                              @"name":@"mint",
                              @"major":@"57813",
@@ -159,11 +159,11 @@
                             @{@"UUID":@"B9407F30-F5F8-466E-AFF9-25556B57FE6D",
                               @"name":@"ice",
                               @"major":@"34114",
-                              @"minor":@"34114"},
+                              @"minor":@"49664"},
                             @{@"UUID":@"B9407F30-F5F8-466E-AFF9-25556B57FE6D",
                               @"name":@"blueberry",
                               @"major":@"40841",
-                              @"minor":@"40841"}];
+                              @"minor":@"45724"}];
     
     
     for (NSDictionary *dict in beaconArr) {
