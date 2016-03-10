@@ -11,21 +11,20 @@
 #import "RWTItem.h"
 #import "AppDelegate.h"
 #import "SummaryCardView.h"
+
 @interface BeconObject : NSObject<CLLocationManagerDelegate, SummaryCardDelegate>{
     CommonWebServices *APIservice;
     ActivityIndicatorController *activityIndicator;
     SummaryCardView *summaryCardView;
     
-    UILabel *warnLbl;
-    UIView *beconView;
     NSString *beconUID;
-    NSTimer *timer;
-    
 }
+
 @property (weak, nonatomic) UIView *visibleCardView;
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) UIViewController *mainView;
--(void)forcetoStopMonitoring;
 
+-(void)forcetoStopMonitoring;
+-(void)restartMonitoring;
 -(void)beconInitialization;
 @end

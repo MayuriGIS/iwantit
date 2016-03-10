@@ -8,6 +8,7 @@
 
 
 #import "MyWishViewController.h"
+
 @interface MyWishViewController (){
     NSInteger selectedBtnIndex;
     BOOL isShow;
@@ -26,6 +27,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+
     if (NSFoundationVersionNumber > NSFoundationVersionNumber_iOS_6_1)
     {
         self.edgesForExtendedLayout =UIRectEdgeNone;
@@ -45,6 +47,9 @@
     APIservice.delegate = self;
     APIservice.activityIndicator = activityIndicator;
     
+    ibeacon = [[BeconObject alloc]init];
+    ibeacon.mainView = self;
+    [ibeacon beconInitialization];
     
     sideMenuBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     sideMenuBtn.frame = CGRectMake(0,0,40,64);
@@ -119,6 +124,8 @@
     titleLbl.font = [UIFont fontWithName:@"OpenSans-Semibold" size:18.0];
     titleLbl.textAlignment = NSTextAlignmentCenter;
     self.navigationItem.titleView = titleLbl;
+
+    
     [self wishListApi];
     
     /*  if ([delegate isNetConnected]) {
@@ -126,7 +133,6 @@
     }else{
         wishListArray = [delegate.dataBaseObj readWishlist];
         tableView.hidden=NO;
-        [indicatorView stopAnimating];
     }*/
     
 }
@@ -431,7 +437,7 @@
             selectedBtnIndex = -1;
             if ([delegate isNetConnected]) {
                 
-                [self deleleApi];
+                [self deleteWishListApi];
                 
             }else{
                 
@@ -440,7 +446,6 @@
                 [tableView reloadData];
                 
             }
-            //            [self removeShopperList];
         }
     }else if (alertView.tag == 200){
         if (buttonIndex == 1) {
@@ -576,94 +581,54 @@
     
 }
 
--(void)removeShopperList{
+- (void)deleteWishListApi{
+    /*URL - http://mo-ovc-test.obnubilate.co.uk:8080/json/process/execute/RemoveFromWishlist
     
-    if ([delegate isNetConnected]) {
-        
-        [self removeApi:productId itemId:itemId];
-    }else{
-        
-        [delegate.dataBaseObj removeProductFromWishlist:productId tableName:@"shopper_tbl"];
-    }
-}
-
-- (void)removeApi:(NSString *)productId itemId:(NSString *)itemId{
-    /*    http://demoqa.ovcdemo.com:8080/POSMClient/json/process/execute/RemoveFromWishlist
-     {
-     "username": "eCommerce",
-     "password": "changeme",
-     "deviceId": "dUUID",
-     "source": "external",
-     "data": {
-     "retailerId": "demoRetailer",
-     "loyaltyId": "ak1@gmail.com",
-     "listType": "WISHLIST",
-     "listName": "WishList",
-     "productId":  "1934796",
-     "itemIdx":"xxx"
-     }
-     }
-     }
-     */
+    Payload -
+    {
+        "retailerId": "defaultRetailer",
+        "loyaltyId": "abhijit@oneviewcommerce.com",
+        "listType": "WISHLIST",
+        "listName": "WishList",
+        "productId":  "10000100",
+        "itemIdx":""
+    }*/
     
-    apiAction = 2;
-    
-    NSMutableDictionary *userData = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"demoRetailer",@"retailerId",@"shopper@ovc.com",@"loyaltyId",@"WISHLIST",@"listType",@"WishList",@"listName",productId,@"productId",itemId,@"itemIdx",nil];
-    NSMutableDictionary *data = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"eCommerce",@"username",@"changeme",@"password",@"dUUID",@"deviceId",@"external",@"source",userData,@"data",nil];
-    NSString *link = [NSString stringWithFormat:@"%@POSMClient/json/process/execute/RemoveFromWishlist",[[NSUserDefaults standardUserDefaults] objectForKey:@"SEVERURL"]];
-    
-    [activityIndicator showActivityIndicator];
-    [CommonWebServices postMethodWithUrl:link dictornay:data onSuccess:^(id responseObject)
-     {
-         [activityIndicator hideActivityIndicator];
-         
-         if ([CommonWebServices isWebResponseNotEmpty:responseObject])
-         {
-             if ([responseObject isKindOfClass:[NSDictionary class]])
-             {
-             }
-             else
-             {
-             }
-         }
-         
-     } onFailure:^(NSError *error)
-     {
-         [activityIndicator hideActivityIndicator];
-         NSLog(@"Error Received : %@", error.localizedDescription);
-         
-     }];
-
-}
-
-- (void)deleleApi{
     productId = [[wishListArray objectAtIndex:selectedIndex]valueForKey:@"productId"];
     itemId = [[wishListArray objectAtIndex:selectedIndex]valueForKey:@"itemidx"];
     
-    NSMutableDictionary *userData=[NSMutableDictionary dictionaryWithObjectsAndKeys:@"demoRetailer",@"retailerId",[[NSUserDefaults standardUserDefaults] stringForKey:@"userMail"],@"loyaltyId",@"WISHLIST",@"listType",@"WishList",@"listName",productId,@"productId",itemId,@"itemIdx",nil];
-    NSMutableDictionary *data = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"eCommerce",@"username",@"changeme",@"password",@"dUUID",@"deviceId",@"external",@"source",userData,@"data",nil];
-    NSString *link=[NSString stringWithFormat:@"%@POSMClient/json/process/execute/RemoveFromWishlist",[[NSUserDefaults standardUserDefaults] objectForKey:@"SERVERURL"]];
+    NSDictionary *data = @{@"retailerId" : @"defaultRetailer",
+                           @"loyaltyId" : [[NSUserDefaults standardUserDefaults] stringForKey:@"userMail"],
+                           @"listType" : @"WISHLIST",
+                           @"listName" : @"WishList",
+                           @"productId" : productId,
+                           @"itemIdx" : itemId};
+    
     
     [activityIndicator showActivityIndicator];
-    [CommonWebServices postMethodWithUrl:link dictornay:data onSuccess:^(id responseObject)
-     {
-         [activityIndicator hideActivityIndicator];
-         
-         if ([CommonWebServices isWebResponseNotEmpty:responseObject])
-         {
-             if ([responseObject isKindOfClass:[NSDictionary class]])
-             {
-             }
-             else
-             {
-             }
-         }
-         
-     } onFailure:^(NSError *error){
-         [activityIndicator hideActivityIndicator];
-         NSLog(@"Error Received : %@", error.localizedDescription);
-     }];
-
+    [APIservice removeWishListApiWithCompletionBlock:^(NSDictionary *resultDic) {
+        [activityIndicator hideActivityIndicator];
+        
+        if ([CommonWebServices isWebResponseNotEmpty:resultDic])
+        {
+            if ([resultDic isKindOfClass:[NSDictionary class]])
+            {
+                
+                [delegate.dataBaseObj removeProductFromWishlist:[[wishListArray objectAtIndex:selectedIndex]valueForKey:@"productId"] tableName:@"wishlist_tbl"];
+                wishListArray = [delegate.dataBaseObj readWishlist];
+                [tableView reloadData];
+            }
+        }
+        
+    } failureBlock:^(NSError *error) {
+        [activityIndicator hideActivityIndicator];
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil
+                                                            message:[error localizedDescription]
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Ok"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+    } dataDict:data];
     
 }
 

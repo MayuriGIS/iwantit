@@ -76,7 +76,6 @@
     
     self.window.windowLevel = UIWindowLevelStatusBar;
     [self.window makeKeyAndVisible];
-    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:isBeaconEnabled];
     return YES;
 }
 
@@ -97,7 +96,7 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application{
     if ([[NSUserDefaults standardUserDefaults] boolForKey:isBeaconView]) {
         [[NSNotificationCenter defaultCenter]
-         postNotificationName:@"LocatinNotification"
+         postNotificationName:@"LocationNotification"
          object:self];
     }
 }
@@ -164,7 +163,6 @@
                               @"name":@"blueberry",
                               @"major":@"40841",
                               @"minor":@"45724"}];
-    
     
     for (NSDictionary *dict in beaconArr) {
         NSUUID *uuid = [[NSUUID alloc] initWithUUIDString:[dict objectForKey:@"UUID"]];

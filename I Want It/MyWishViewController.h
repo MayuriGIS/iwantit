@@ -11,11 +11,13 @@
 #import "ProductViewController.h"
 #import "SideOptionViewController.h"
 #import "AvailableAppointViewController.h"
+#import "BeconObject.h"
 
-@interface MyWishViewController : UIViewController<UITableViewDelegate,UITableViewDataSource,UIGestureRecognizerDelegate,UIAlertViewDelegate>{
+@interface MyWishViewController : UIViewController<UITableViewDelegate,UITableViewDataSource,UIGestureRecognizerDelegate,UIAlertViewDelegate,CLLocationManagerDelegate>{
     ActivityIndicatorController *activityIndicator;
     CommonWebServices *APIservice;
     AppDelegate *delegate;
+    BeconObject *ibeacon;
 
     UIView *popUpView;
     UIButton *existBtn, *newBtn;

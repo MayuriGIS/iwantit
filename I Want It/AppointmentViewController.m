@@ -255,7 +255,7 @@
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    delegate.selectedIndex = indexPath.row;
+    delegate.selectedIndex = (int)indexPath.row;
     if ([delegate.naviPath isEqual:@"wishlist"]) {
         apiAction=1;
         NSLog(@"this is productId :%@",delegate.productId);

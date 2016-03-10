@@ -44,6 +44,7 @@ typedef void (^JSONWebserviceFailureBlock) (NSError *error);
 
 - (void) createNotificationCustomerArrivalWithCompletionBlock:(void (^) (NSDictionary *)) completion failureBlock:(void (^) (NSError *))failure dataDict:(NSDictionary *)dataDict;
 
+- (void)removeWishListApiWithCompletionBlock:(void (^) (NSDictionary *)) completion failureBlock:(void (^) (NSError *))failure dataDict:(NSDictionary *)dataDict;
 
 
 + (void)getMethodWithUrl:(NSString *)url dictornay:(NSDictionary *)dict onSuccess:(void (^)(id))success onFailure:(void (^)(NSError *))errors;

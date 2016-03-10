@@ -67,7 +67,6 @@
             image = [NSString stringWithFormat:@"%@",[[temArray objectAtIndex:i] valueForKey:@"mainImageId"]];
             
             NSString *queryString=[NSString stringWithFormat:@"INSERT INTO wishlist_tbl  values('%@','%@','%@','%@','%@','%@','%@','%@')",productId,description,itemidx,quantity,isDeleted,lastModified,amount,image];
-            NSLog(@"queryString : %@",queryString);
             const char *sqlstatement =[queryString UTF8String];
             
             
@@ -207,7 +206,6 @@
 
 
             NSString *queryString=[NSString stringWithFormat:@"INSERT INTO shopper_tbl  values('%@','%@','%@','%@','%@','%@','%@','%@')",productId,description,itemidx,quantity,isDeleted,lastModified,amount,image];
-            NSLog(@"queryString : %@",queryString);
             const char *sqlstatement =[queryString UTF8String];
             
             sqlite3_stmt *compiledStatement=nil;
@@ -277,7 +275,6 @@
     NSString * queryString=@"";
     NSMutableArray *apptArray = [[NSMutableArray alloc]init];
     queryString=[NSString stringWithFormat:@"SELECT * FROM appointment_tbl"];
-    NSLog(@"queryString:%@",queryString);
     
     if(sqlite3_open([dataBasePath UTF8String], &dataBaseObject) == SQLITE_OK){
         sqlite3_exec(dataBaseObject, "BEGIN TRANSACTION", 0, 0, 0);
@@ -331,7 +328,6 @@
     NSString * queryString=@"";
     NSMutableArray *apptArray = [[NSMutableArray alloc]init];
     queryString=[NSString stringWithFormat:@"SELECT DISTINCT * FROM shopper_tbl"];
-    NSLog(@"queryString:%@",queryString);
     if(sqlite3_open([dataBasePath UTF8String], &dataBaseObject) == SQLITE_OK){
         sqlite3_exec(dataBaseObject, "BEGIN TRANSACTION", 0, 0, 0);
         const char * sqlStatement=[queryString UTF8String];
@@ -371,9 +367,7 @@
 - (void) updateFittingrunnData:(NSString *)productId
 {
     NSString *lite =[NSString stringWithFormat:@"UPDATE fittingroom_tbl set product_request = 'Request' WHERE product_id='%@'",productId];
-    
-    NSLog(@"queryString:%@",lite);
-    
+        
     const char * sqlStatement = [lite UTF8String];
     if(sqlite3_open([dataBasePath UTF8String], &dataBaseObject) == SQLITE_OK)
     {

@@ -10,18 +10,17 @@
 #import "MFSideMenu.h"
 #import "AppDelegate.h"
 #import "BeconObject.h"
-@interface iBeaconViewController : UIViewController{
+@interface iBeaconViewController : UIViewController<SummaryCardDelegate>{
     CommonWebServices *APIservice;
-    ActivityIndicatorController *activityIndicator;
     AppDelegate *delegate;
     BeconObject *ibeacon;
-    
+    SummaryCardView *summaryCardView;
+
     UILabel *warnLbl;
     UIView *beconView;
-    NSString *beconUID;
-    NSTimer *timer;
 }
 @property (nonatomic, strong) UISwitch *beconSwitch;
+@property (weak, nonatomic) UIView *visibleCardView;
 
 @end
 

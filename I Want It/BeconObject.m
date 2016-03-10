@@ -10,18 +10,15 @@
 
 @implementation BeconObject
 
-#define IDLETIMER 300
-
 -(void)beconInitialization{
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
 
     APIservice = [[CommonWebServices alloc] init];
-//    APIservice.activityIndicator = activityIndicator;
 
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(LocationManagerAction)
-                                                 name:@"LocatinNotification"
+                                                 name:@"LocationNotification"
                                                object:nil];
     
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:isBeaconView];
@@ -29,36 +26,47 @@
 }
 
 - (void)LocationManagerAction{
-    NSLog (@"Successfully received the test notification!");
-    if ([CLLocationManager locationServicesEnabled]) {
-        NSLog(@"Yes");
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:isBeaconEnabled];
-        [self restartMonitoring];
-    }else{
-        NSLog(@"No");
-        [UIView animateWithDuration:0.5 animations:^{
-            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Warning !"
-                                                                                     message:@"This feature is currently unavailable- turn on location services?"
-                                                                              preferredStyle:UIAlertControllerStyleAlert];
-            
-            UIAlertAction *actionOk = [UIAlertAction actionWithTitle:@"Settings"
-                                                               style:UIAlertActionStyleDefault
-                                                             handler:^(UIAlertAction * action)
-                                       {
-                                           BOOL canOpenSettings = (UIApplicationOpenSettingsURLString != NULL);
-                                           if (canOpenSettings)
-                                           {
-                                               [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"prefs:root=LOCATION_SERVICES"]];
-                                           }
-                                       }];
+    
+    if([CLLocationManager locationServicesEnabled]){
+        
+        if([CLLocationManager authorizationStatus]==kCLAuthorizationStatusDenied){
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"App Permission Denied" message:@"To re-enable, Please go to Settings and turn on Location Service for this app."preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *actionOk = [UIAlertAction actionWithTitle:@"Settings" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
+                BOOL canOpenSettings = (UIApplicationOpenSettingsURLString != NULL);
+                if (canOpenSettings)
+                {
+                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+                }
+            }];
             
             UIAlertAction *actionCancel = [UIAlertAction actionWithTitle:@"Cancel"
                                                                    style:UIAlertActionStyleDefault
                                                                  handler:nil];
             [alertController addAction:actionOk];
             [alertController addAction:actionCancel];
-            [self.mainView.navigationController presentViewController:alertController animated:YES completion:nil];
-        }completion:nil];
+            [self.mainView presentViewController:alertController animated:YES completion:nil];
+
+        }else{
+            [self restartMonitoring];
+        }
+    }else{
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Warning !"
+                                                                                 message:@"This feature is Currently Unavailable- Turn ON Location Services?"preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *actionOk = [UIAlertAction actionWithTitle:@"Settings" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
+            BOOL canOpenSettings = (UIApplicationOpenSettingsURLString != NULL);
+            if (canOpenSettings)
+            {
+                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"prefs:root=LOCATION_SERVICES"]];
+            }
+        }];
+        
+        UIAlertAction *actionCancel = [UIAlertAction actionWithTitle:@"Cancel"
+                                                               style:UIAlertActionStyleDefault
+                                                             handler:nil];
+        [alertController addAction:actionOk];
+        [alertController addAction:actionCancel];
+        [self.mainView presentViewController:alertController animated:YES completion:nil];
     }
 }
 
@@ -78,7 +86,6 @@
     [delegate.beaconTimer invalidate];
     delegate.beaconTimer = nil;
     [self.locationManager stopUpdatingLocation];
-    NSLog(@"The switch is turned off.");
     for (RWTItem *obj in delegate.beaconArray) {
         [self stopMonitoringItem:obj];
     }
@@ -143,6 +150,60 @@
     }
 }
 
+
+- (void)showSummaryCard:(NSDictionary *)infoDict{
+    if (!summaryCardView) {
+        summaryCardView = [[[NSBundle mainBundle] loadNibNamed:@"SummaryCardView"
+                                                         owner:self
+                                                       options:nil] firstObject];
+        summaryCardView.backgroundColor = [UIColor clearColor];
+    }
+    UIWindow* window = [UIApplication sharedApplication].keyWindow;
+    if (!window){
+        window = [[UIApplication sharedApplication].windows objectAtIndex:0];
+    }
+    [[[window subviews] objectAtIndex:0] addSubview:summaryCardView];
+    
+    summaryCardView.frame = [[UIScreen mainScreen]bounds];
+    summaryCardView.layer.masksToBounds = YES;
+    summaryCardView.delegate = self;
+    summaryCardView.titleLabel.text = [infoDict objectForKey:@"title"];
+    summaryCardView.summaryView.text = [infoDict objectForKey:@"summary"];
+    [summaryCardView.okButton setTitle:@"OK" forState:UIControlStateNormal];
+    summaryCardView.imageView.image = [UIImage imageNamed:[infoDict objectForKey:@"image"]];
+    
+    self.visibleCardView = summaryCardView;
+    [UIView animateWithDuration:0.35 animations:^{
+        summaryCardView.frame = [[UIScreen mainScreen]bounds];
+    } completion:^(BOOL finished) {
+    }];
+}
+
+#pragma Mark - Okay Button Action
+- (void)summaryButtonClickedAtIndex:(int)index
+{
+    AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    delegate.beaconTimer = [NSTimer    scheduledTimerWithTimeInterval:IDLETIMER target:self selector:@selector(LocationManagerAction) userInfo:nil repeats:NO];
+
+    switch (index) {
+        case 0:
+        {
+            [self userRegistrationAPI];
+
+            [UIView animateWithDuration:0.35 animations:^{
+                self.visibleCardView.frame = CGRectMake(0, self.visibleCardView.frame.size.height, self.visibleCardView.frame.size.width, self.visibleCardView.frame.size.height);
+            } completion:^(BOOL finished) {
+                [summaryCardView removeFromSuperview];
+                self.visibleCardView = nil;
+            }];
+        }
+            break;
+        default:
+            break;
+    }
+}
+
+#pragma Mark - API SERVICE
 -(void)userRegistrationAPI{
     /*
      URL - http://<<server name>>:<<port number>>/json/process/execute/NotifyCustomerArrival
@@ -171,61 +232,6 @@
         [alertView show];
     } dataDict:data];
 }
-
-- (void)showSummaryCard:(NSDictionary *)infoDict{
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:isBeaconEnabled]) {
-        if (!summaryCardView) {
-            summaryCardView = [[[NSBundle mainBundle] loadNibNamed:@"SummaryCardView"
-                                                             owner:self
-                                                           options:nil] firstObject];
-            summaryCardView.backgroundColor = [UIColor clearColor];
-        }
-        UIWindow* window = [UIApplication sharedApplication].keyWindow;
-        if (!window){
-            window = [[UIApplication sharedApplication].windows objectAtIndex:0];
-        }
-        [[[window subviews] objectAtIndex:0] addSubview:summaryCardView];
-        
-        summaryCardView.frame = [[UIScreen mainScreen]bounds];
-        summaryCardView.layer.masksToBounds = YES;
-        summaryCardView.delegate = self;
-        summaryCardView.titleLabel.text = [infoDict objectForKey:@"title"];
-        summaryCardView.summaryView.text = [infoDict objectForKey:@"summary"];
-        [summaryCardView.okButton setTitle:@"OK" forState:UIControlStateNormal];
-        summaryCardView.imageView.image = [UIImage imageNamed:[infoDict objectForKey:@"image"]];
-        
-        self.visibleCardView = summaryCardView;
-        [UIView animateWithDuration:0.35 animations:^{
-            summaryCardView.frame = [[UIScreen mainScreen]bounds];
-        } completion:^(BOOL finished) {
-        }];
-    }
-}
-
-
-- (void)summaryButtonClickedAtIndex:(int)index
-{
-    AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    delegate.beaconTimer = [NSTimer    scheduledTimerWithTimeInterval:IDLETIMER target:self selector:@selector(LocationManagerAction) userInfo:nil repeats:NO];
-
-    switch (index) {
-        case 0:
-        {
-            [self userRegistrationAPI];
-
-            [UIView animateWithDuration:0.35 animations:^{
-                self.visibleCardView.frame = CGRectMake(0, self.visibleCardView.frame.size.height, self.visibleCardView.frame.size.width, self.visibleCardView.frame.size.height);
-            } completion:^(BOOL finished) {
-                [summaryCardView removeFromSuperview];
-                self.visibleCardView = nil;
-            }];
-        }
-            break;
-        default:
-            break;
-    }
-}
-
 
 
 @end

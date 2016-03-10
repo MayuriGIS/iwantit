@@ -197,6 +197,10 @@
     [self sendPostWebserviceRequestWithCompletionBlock:completion failureBlock:failure urlString:urlString postData:dataDict];
 }
 
+- (void)removeWishListApiWithCompletionBlock:(void (^) (NSDictionary *)) completion failureBlock:(void (^) (NSError *))failure dataDict:(NSDictionary *)dataDict{
+    NSString *urlString = [NSString stringWithFormat:@"%@json/process/execute/RemoveFromWishlist",[CommonWebServices serverName]];
+    [self sendPostWebserviceRequestWithCompletionBlock:completion failureBlock:failure urlString:urlString postData:dataDict];
+}
 
 +(NSString *)serverName{
     NSString *url;

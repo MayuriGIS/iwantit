@@ -32,7 +32,7 @@
     apiAction = 0;
     
     activityIndicator = [[ActivityIndicatorController alloc] init];
-    [activityIndicator initWithViewController:self];
+    [activityIndicator initWithViewController:self.navigationController];
     
     APIservice = [[CommonWebServices alloc] init];
     APIservice.delegate = self;

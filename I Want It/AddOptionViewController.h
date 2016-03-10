@@ -14,6 +14,7 @@
     AppDelegate *delegate;
     NSMutableArray *seleImg,*unSeleImg;
     ActivityIndicatorController *activityIndicator;
+    CommonWebServices *APIservice;
 
 }
 
