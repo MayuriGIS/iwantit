@@ -124,10 +124,10 @@
             [UIView animateWithDuration:0.5 animations:^{
                 warnLbl.frame = CGRectMake(10,-100,300,80);
             }];
-//            if (delegate.beaconTimer == nil) {
-//                [ibeacon beconInitialization];
-//            }
-
+            
+            if (delegate.beaconTimer == nil) {
+                [ibeacon beconInitialization];
+            }
         }
     }else{
         NSLog(@"Location Services Disabled");
