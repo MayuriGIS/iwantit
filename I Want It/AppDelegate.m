@@ -137,19 +137,18 @@
     
     /*// GIS Beacons
     NSArray *beaconArr = @[@{@"UUID":@"F94DBB23-2266-7822-3782-57BEAC0952AC",
-                             @"name":@"mint",
+                             @"name":@"0117C55415A3",
                              @"major":@"57813",
                              @"minor":@"43675"},
                            @{@"UUID":@"F94DBB23-2266-7822-3782-57BEAC0952AC",
-                             @"name":@"ice",
+                             @"name":@"0117C5576FD8",
                              @"major":@"14743",
                              @"minor":@"60335"},
-                           @{@"UUID":@"B9407F30-F5F8-466E-AFF9-25556B57FE6D",
-                             @"name":@"blueberry",
-                             @"major":@"40841",
-                             @"minor":@"40841"}];
+                           @{@"UUID":@"F94DBB23-2266-7822-3782-57BEAC0952AC",
+                             @"name":@"0117C559E19A",
+                             @"major":@"14743",
+                             @"minor":@"60335"}];
     */
-    
      // OVC Beacons
      NSArray *beaconArr = @[@{@"UUID":@"B9407F30-F5F8-466E-AFF9-25556B57FE6D",
                               @"name":@"mint",

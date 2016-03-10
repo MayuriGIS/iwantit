@@ -49,7 +49,10 @@
     
     ibeacon = [[BeconObject alloc]init];
     ibeacon.mainView = self;
-    [ibeacon beconInitialization];
+    
+    if (delegate.beaconTimer == nil) {
+        [ibeacon beconInitialization];
+    }
     
     sideMenuBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     sideMenuBtn.frame = CGRectMake(0,0,40,64);

@@ -12,7 +12,6 @@
 #import "BeconObject.h"
 @interface iBeaconViewController : UIViewController<SummaryCardDelegate>{
     CommonWebServices *APIservice;
-    AppDelegate *delegate;
     BeconObject *ibeacon;
     SummaryCardView *summaryCardView;
 

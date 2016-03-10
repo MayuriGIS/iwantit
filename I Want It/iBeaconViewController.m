@@ -23,9 +23,7 @@
         self.edgesForExtendedLayout = UIRectEdgeNone;
     }
     self.view.backgroundColor = [UIColor whiteColor];
-        
-    delegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-
+    
     APIservice = [[CommonWebServices alloc] init];
     
     ibeacon = [[BeconObject alloc]init];
@@ -125,6 +123,7 @@
                 warnLbl.frame = CGRectMake(10,-100,300,80);
             }];
             
+            AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
             if (delegate.beaconTimer == nil) {
                 [ibeacon beconInitialization];
             }
@@ -204,7 +203,8 @@
         {
             [self.beconSwitch setOn:NO];
             [self userRegistrationAPI];
-            [ibeacon performSelector:@selector(beconInitialization) withObject:nil afterDelay:IDLETIMER];
+            AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+            delegate.beaconTimer = [NSTimer    scheduledTimerWithTimeInterval:IDLETIMER target:ibeacon selector:@selector(beconInitialization) userInfo:nil repeats:NO];
 
             [UIView animateWithDuration:0.35 animations:^{
                 self.visibleCardView.frame = CGRectMake(0, self.visibleCardView.frame.size.height, self.visibleCardView.frame.size.width, self.visibleCardView.frame.size.height);

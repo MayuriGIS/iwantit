@@ -10,7 +10,7 @@
 #import "AppDelegate.h"
 #import "ProductViewController.h"
 #import "SideOptionViewController.h"
-#import "BeconObject.h"
+
 @interface SearchViewController : UIViewController<UITableViewDelegate,UITableViewDataSource,UIGestureRecognizerDelegate,UISearchBarDelegate,UISearchDisplayDelegate>
 {
     UISearchDisplayController *searchDisplay;
