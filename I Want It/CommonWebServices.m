@@ -192,6 +192,22 @@
     [self sendPostWebserviceRequestWithCompletionBlock:completion failureBlock:failure urlString:urlString postData:dataDict];
 }
 
+
+- (void) getAppointmentDetailsWithCompletionBlock:(void (^) (NSDictionary *)) completion failureBlock:(void (^) (NSError *))failure dataDict:(NSDictionary *)dataDict{
+    NSString *urlString = [NSString stringWithFormat:@"%@json/process/execute/GetAppointmentDetails",[CommonWebServices serverName]];
+    [self sendPostWebserviceRequestWithCompletionBlock:completion failureBlock:failure urlString:urlString postData:dataDict];
+}
+
+- (void) cancellAppointmentDetailsWithCompletionBlock:(void (^) (NSDictionary *)) completion failureBlock:(void (^) (NSError *))failure dataDict:(NSDictionary *)dataDict{
+    NSString *urlString = [NSString stringWithFormat:@"%@json/process/execute/CancelAppointment",[CommonWebServices serverName]];
+    [self sendPostWebserviceRequestWithCompletionBlock:completion failureBlock:failure urlString:urlString postData:dataDict];
+}
+
+- (void) updateAppointmentDetailsWithCompletionBlock:(void (^) (NSDictionary *)) completion failureBlock:(void (^) (NSError *))failure dataDict:(NSDictionary *)dataDict{
+    NSString *urlString = [NSString stringWithFormat:@"%@json/process/execute/UpdateAppointment",[CommonWebServices serverName]];
+    [self sendPostWebserviceRequestWithCompletionBlock:completion failureBlock:failure urlString:urlString postData:dataDict];
+}
+
 - (void)createNotificationCustomerArrivalWithCompletionBlock:(void (^) (NSDictionary *)) completion failureBlock:(void (^) (NSError *))failure dataDict:(NSDictionary *)dataDict{
     NSString *urlString = [NSString stringWithFormat:@"%@json/process/execute/NotifyCustomerArrival",[CommonWebServices serverName]];
     [self sendPostWebserviceRequestWithCompletionBlock:completion failureBlock:failure urlString:urlString postData:dataDict];

@@ -25,7 +25,8 @@
     self.view.backgroundColor = [UIColor whiteColor];
     
     APIservice = [[CommonWebServices alloc] init];
-    
+    delegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+
     ibeacon = [[BeconObject alloc]init];
     ibeacon.mainView = self;
         
@@ -123,7 +124,6 @@
                 warnLbl.frame = CGRectMake(10,-100,300,80);
             }];
             
-            AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
             if (delegate.beaconTimer == nil) {
                 [ibeacon beconInitialization];
             }
@@ -160,6 +160,8 @@
 
 - (void) switchIsChanged:(UISwitch *)sender{
     if ([sender isOn]){
+        [delegate.beaconTimer invalidate];
+        delegate.beaconTimer = nil;
         [ibeacon forcetoStopMonitoring];
         NSDictionary *dict = @{@"title":@"Welcome to the “London - The Strand” Store",@"summary":@"An Associate is on the way to assist you.",@"image":@"o2image.jpg"};
         if(!self.visibleCardView) {
@@ -203,8 +205,10 @@
         {
             [self.beconSwitch setOn:NO];
             [self userRegistrationAPI];
-            AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-            delegate.beaconTimer = [NSTimer    scheduledTimerWithTimeInterval:IDLETIMER target:ibeacon selector:@selector(beconInitialization) userInfo:nil repeats:NO];
+            [delegate.beaconTimer invalidate];
+            delegate.beaconTimer = nil;
+
+            delegate.beaconTimer = [NSTimer  scheduledTimerWithTimeInterval:IDLETIMER target:ibeacon selector:@selector(beconInitialization) userInfo:nil repeats:NO];
 
             [UIView animateWithDuration:0.35 animations:^{
                 self.visibleCardView.frame = CGRectMake(0, self.visibleCardView.frame.size.height, self.visibleCardView.frame.size.width, self.visibleCardView.frame.size.height);

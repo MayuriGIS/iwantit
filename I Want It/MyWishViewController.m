@@ -53,7 +53,7 @@
     if (delegate.beaconTimer == nil) {
         [ibeacon beconInitialization];
     }
-    
+
     sideMenuBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     sideMenuBtn.frame = CGRectMake(0,0,40,64);
     sideMenuBtn.contentEdgeInsets = UIEdgeInsetsMake(-20, -15, 0, 0);
@@ -312,7 +312,6 @@
         }
         cell.userInteractionEnabled = NO;
     }
-    
     return cell;
 }
 
@@ -347,11 +346,9 @@
     self.menuContainerViewController.panMode = MFSideMenuPanModeDefault;
     selectedBtnIndex = [sender tag] - 200;
     [tableView reloadData];
-    
 }
 
 - (void)cellSwiped:(UISwipeGestureRecognizer *)gestureRecognizer {
-    
     if (gestureRecognizer.direction == UISwipeGestureRecognizerDirectionLeft) {
         NSLog(@"swipe left");
         self.menuContainerViewController.panMode = MFSideMenuPanModeNone;
@@ -373,13 +370,11 @@
         }
         NSLog(@"swipe right");
     }
-    
 }
 
 
 - (void)infoAction:(id)sender{
     selectedIndex = [sender tag] - 3000;
-
     apiAction = 1;
     delegate.productId = [[wishListArray objectAtIndex:selectedIndex]valueForKey:@"productId"];
     delegate.itemIdxId = [[wishListArray objectAtIndex:selectedIndex]valueForKey:@"itemidx"];
@@ -399,24 +394,18 @@
 }
 
 - (void)newBtnAction{
-    
     popUpView.hidden = YES;
     AvailableAppointViewController *creatAppt=[[AvailableAppointViewController alloc]init];
     [self.navigationController pushViewController:creatAppt animated:YES];
 }
 
 - (void)existBtnAction{
-    
     NSMutableArray *apptArr = [delegate.dataBaseObj readAppointment];
     if (apptArr.count != 0) {
-        
         popUpView.hidden = YES;
-        
         AppointmentViewController *ApptObj = [[AppointmentViewController alloc]init];
         [self.navigationController pushViewController:ApptObj animated:YES];
-        
     }else{
-        
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Alert" message:@"No Appointments Available!!! Do you want to Creat New one?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
         alert.tag = 200;
         [alert show];

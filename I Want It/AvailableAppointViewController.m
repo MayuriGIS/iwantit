@@ -702,7 +702,6 @@
     
     NSMutableDictionary *productDict;
     NSArray *productArray;
-    delegate.productId = @"delete";
     if ([delegate.productId isEqualToString:@""]) {
         
     }else{

@@ -117,7 +117,6 @@
             NSLog(@"this is product dici:%d",delegate.selectedIndex);
             
             if ([delegate isNetConnected]) {
-              
                 [self addWishListApi:[shopperArr objectAtIndex:delegate.selectedIndex]];
                 [self removeApishoperList:delegate.productId itemId:delegate.itemIdxId];
             }else{
@@ -126,6 +125,7 @@
             }
         }else{
             delegate.popUpEnable=YES;
+            [self closeBtnAct];
             [self.menuContainerViewController setMenuState:MFSideMenuStateClosed];
         }
     }else if (indexPath.row == 1){
@@ -154,7 +154,7 @@
             }
         }else{
           
-            UIAlertView *confAlert = [[UIAlertView alloc]initWithTitle:@"Delete" message:@"Are You Sure? You Want to Delete?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No", nil];
+            UIAlertView *confAlert = [[UIAlertView alloc]initWithTitle:@"Delete" message:@"Are You Sure You Want to Delete?" delegate:self cancelButtonTitle:@"Yes" otherButtonTitles:@"No", nil];
             confAlert.tag = 102;
             [confAlert show];
 
@@ -168,7 +168,7 @@
 }
 
 -(void)closeBtnAct{
-    delegate.popUpEnable = NO;
+    delegate.popUpEnable = YES;
     [[NSNotificationCenter defaultCenter] postNotificationName:@"theChange" object:nil];
     [self.menuContainerViewController toggleRightSideMenuCompletion:nil];
 
@@ -244,8 +244,8 @@
      source = external;
      username = eCommerce;
      }
-
      */
+    
     NSMutableDictionary *data;
     NSDictionary *prodDict;
     apiAction = 1;

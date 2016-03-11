@@ -14,7 +14,8 @@
     CommonWebServices *APIservice;
     BeconObject *ibeacon;
     SummaryCardView *summaryCardView;
-
+    AppDelegate *delegate;
+    
     UILabel *warnLbl;
     UIView *beconView;
 }

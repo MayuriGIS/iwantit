@@ -135,7 +135,7 @@
 - (void)configuration{
     // Configuration of Beacons
     
-    /*// GIS Beacons
+  /*// GIS Beacons
     NSArray *beaconArr = @[@{@"UUID":@"F94DBB23-2266-7822-3782-57BEAC0952AC",
                              @"name":@"0117C55415A3",
                              @"major":@"57813",

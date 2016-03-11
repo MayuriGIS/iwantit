@@ -26,17 +26,17 @@
     {
         self.edgesForExtendedLayout =UIRectEdgeNone;
     }
-
+    
     apiAction=0;
-
+    
     
     activityIndicator = [[ActivityIndicatorController alloc] init];
     [activityIndicator initWithViewController:self.navigationController];
-
+    
     APIservice = [[CommonWebServices alloc] init];
     APIservice.delegate = self;
     APIservice.activityIndicator = activityIndicator;
-
+    
     
     
     apptArray = [[NSMutableArray alloc]initWithCapacity:0];
@@ -47,7 +47,7 @@
     
     delegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
-
+    
     sideMenuBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     sideMenuBtn.frame = CGRectMake(0,0,40,64);
     sideMenuBtn.contentEdgeInsets = UIEdgeInsetsMake(-20, -15, 0, 0);
@@ -91,13 +91,13 @@
     
     [self appointmentApi];
     
-   /* if ([delegate isNetConnected]) {
-        [self appointmentApi];
-    }else{
-        apptArray = [delegate.dataBaseObj readAppointment];
-        tableView.hidden=NO;
-        [tableView reloadData];
-    }*/
+    /* if ([delegate isNetConnected]) {
+     [self appointmentApi];
+     }else{
+     apptArray = [delegate.dataBaseObj readAppointment];
+     tableView.hidden=NO;
+     [tableView reloadData];
+     }*/
 }
 
 -(void)menuBtnAction{
@@ -260,9 +260,11 @@
         apiAction=1;
         NSLog(@"this is productId :%@",delegate.productId);
         NSLog(@"this is navigation from:%@",delegate.naviPath);
-//        [self addItemtoAppointment];
+        [self addItemtoAppointment];
     }else{
         AppointDetailViewController *AppDetailObj=[[AppointDetailViewController alloc]init];
+        NSLog(@"%@", [[apptArray objectAtIndex:indexPath.row] valueForKey:@"id"]);
+        AppDetailObj.appId = [[apptArray objectAtIndex:indexPath.row] valueForKey:@"id"];
         [self.navigationController pushViewController:AppDetailObj animated:YES];
     }
 }
@@ -282,14 +284,14 @@
      */
     
     NSDictionary *userDetail = [[NSUserDefaults standardUserDefaults] objectForKey:USERDETAIL];
-
+    
     NSDictionary *data = @{@"loyaltyId" : [userDetail valueForKey:@"loyaltyId"],
                            @"email" : [userDetail valueForKey:@"email"],
                            @"retailerId" : @"defaultRetailer",
                            @"ovclid": [userDetail valueForKey:@"email"]};
-
+    
     [activityIndicator showActivityIndicator];
-   
+    
     [APIservice getAllAppointmentsWithCompletionBlock:^(NSDictionary *resultDic) {
         [activityIndicator hideActivityIndicator];
         
@@ -308,85 +310,113 @@
                 }
                 tableView.hidden=NO;
                 [tableView reloadData];
+                
             }
             else
             {
+                
             }
         }
         
     } failureBlock:^(NSError *error) {
         [activityIndicator hideActivityIndicator];
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil
-                                                        message:[error localizedDescription]
-                                                       delegate:nil
-                                              cancelButtonTitle:@"Ok"
-                                              otherButtonTitles:nil];
+                                                            message:[error localizedDescription]
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Ok"
+                                                  otherButtonTitles:nil];
         [alertView show];
-
+        
     } dataDict:data];
 }
 
 -(void)addItemtoAppointment{
-    /*
-     http://demoqa.ovcdemo.com:8080/POSMClient/json/process/execute/UpdateAppointment
-     {
-         "username": "eCommerce",
-         "password": "changeme",
-         "deviceId": "dUUID",
-         "source": "external",
-         "data":{
-     "apptEndTime":"14:00:00.000","apptDate":"2014-09-30","ovclid":"rajivpras.bits@gmail.com","apptStartTime":"13:30:00.000","apptDesc":"sdfgsdfgdsfg","appointmentItemList":[{"sku":"1992693"}],"apptId":"98e618c7-b405-4668-92cd-e992aaa1faaa"}
+    /*{
+     "apptEndTime":"11:00",
+     "apptDate":"2016-03-25",
+     "apptStartTime":"10:30",
+     "appointmentItemList":[
+     {"sku":"10000100"}
+     ],
+     "apptDesc":"Training session",
+     "apptId":"220454bb-6777-4ab4-8bc6-760c6f45e410"
      }
      */
     
+    NSMutableDictionary *proData = [NSMutableDictionary dictionaryWithObjectsAndKeys:delegate.productId,@"sku",nil];
+    NSMutableArray *apptItem = [[NSMutableArray alloc]initWithObjects:proData, nil];
     
-    NSMutableDictionary *proData=[NSMutableDictionary dictionaryWithObjectsAndKeys:delegate.productId,@"sku",nil];
-    
-    NSMutableArray *apptItem=[[NSMutableArray alloc]initWithObjects:proData, nil];
-    NSMutableDictionary *userData=[NSMutableDictionary dictionaryWithObjectsAndKeys:[[apptArray objectAtIndex:delegate.selectedIndex]objectForKey:@"endTime"],@"apptEndTime",
-                                   [[apptArray objectAtIndex:delegate.selectedIndex]objectForKey:@"apptDate"],@"apptDate",
-                                   [[NSUserDefaults standardUserDefaults] stringForKey:@"userMail"],@"ovclid",
-                                   [[apptArray objectAtIndex:delegate.selectedIndex]objectForKey:@"startTime"],@"apptStartTime",[[apptArray objectAtIndex:delegate.selectedIndex]objectForKey:@"description"],@"apptDesc",apptItem ,@"appointmentItemList",[[apptArray objectAtIndex:delegate.selectedIndex]objectForKey:@"id"],@"apptId",nil];
-    NSMutableDictionary *data = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"eCommerce",@"username",@"changeme",@"password",@"dUUID",@"deviceId",@"external",@"source",userData,@"data",nil];
-    
-    NSString *link = [NSString stringWithFormat:@"POSMClient/json/process/execute/UpdateAppointment"];
-    
+    NSMutableDictionary *data = [NSMutableDictionary dictionaryWithObjectsAndKeys:[[apptArray objectAtIndex:delegate.selectedIndex]objectForKey:@"endTime"],@"apptEndTime",
+                                 [[apptArray objectAtIndex:delegate.selectedIndex]objectForKey:@"apptDate"],@"apptDate",
+                                 [[apptArray objectAtIndex:delegate.selectedIndex]objectForKey:@"startTime"],@"apptStartTime",[[apptArray objectAtIndex:delegate.selectedIndex]objectForKey:@"description"],@"apptDesc",apptItem ,@"appointmentItemList",[[apptArray objectAtIndex:delegate.selectedIndex]objectForKey:@"id"],@"apptId",nil];
     [activityIndicator showActivityIndicator];
-    [CommonWebServices postMethodWithUrl:link dictornay:data onSuccess:^(id responseObject)
+    
+    [APIservice updateAppointmentDetailsWithCompletionBlock:^(NSDictionary *resultDic) {
+    [activityIndicator hideActivityIndicator];
+        
+        if ([CommonWebServices isWebResponseNotEmpty:resultDic])
+        {
+            if ([resultDic isKindOfClass:[NSDictionary class]])
+            {
+                if ([delegate.naviPath isEqual:@"wishlist"]) {
+                    UIAlertView *alertView=[[UIAlertView alloc]initWithTitle:@"Alert" message:@"Your product successfully added" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                    [alertView show];
+                }
+                NSLog(@"Appt List Data: %@", resultDic);
+                delegate.naviPath=@"";
+                [tableView reloadData];
+                tableView.hidden=NO;
+            }else{
+                
+            }
+        }
+    } failureBlock:^(NSError *error) {
+        [activityIndicator hideActivityIndicator];
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil
+                                                            message:[error localizedDescription]
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Ok"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+    } dataDict:data];
+    
+    
+    /*[activityIndicator showActivityIndicator];
+     [CommonWebServices postMethodWithUrl:link dictornay:data onSuccess:^(id responseObject)
      {
-         [activityIndicator hideActivityIndicator];
-         
-         if ([CommonWebServices isWebResponseNotEmpty:responseObject])
-         {
-             if ([responseObject isKindOfClass:[NSDictionary class]])
-             {
-                 if ([delegate.naviPath isEqual:@"wishlist"]) {
-                     UIAlertView *alertView=[[UIAlertView alloc]initWithTitle:@"Alert" message:@"Your product successfully added" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-                     [alertView show];
-                 }
-                 NSLog(@"Appt List Data: %@",responseObject);
-                 delegate.naviPath=@"";
-                 
-                 [tableView reloadData];
-                 tableView.hidden=NO;
-             }
-             else
-             {
-             }
-         }
-         
+     [activityIndicator hideActivityIndicator];
+     
+     if ([CommonWebServices isWebResponseNotEmpty:responseObject])
+     {
+     if ([responseObject isKindOfClass:[NSDictionary class]])
+     {
+     if ([delegate.naviPath isEqual:@"wishlist"]) {
+     UIAlertView *alertView=[[UIAlertView alloc]initWithTitle:@"Alert" message:@"Your product successfully added" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+     [alertView show];
+     }
+     NSLog(@"Appt List Data: %@",responseObject);
+     delegate.naviPath=@"";
+     
+     [tableView reloadData];
+     tableView.hidden=NO;
+     }
+     else
+     {
+     }
+     }
+     
      } onFailure:^(NSError *error)
      {
-         [activityIndicator hideActivityIndicator];
-         NSLog(@"Error Received : %@", error.localizedDescription);
-         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error Reterive Data"
-                                                             message:[error localizedDescription]
-                                                            delegate:nil
-                                                   cancelButtonTitle:@"Ok"
-                                                   otherButtonTitles:nil];
-         [alertView show];
-         
-     }];
+     [activityIndicator hideActivityIndicator];
+     NSLog(@"Error Received : %@", error.localizedDescription);
+     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error Reterive Data"
+     message:[error localizedDescription]
+     delegate:nil
+     cancelButtonTitle:@"Ok"
+     otherButtonTitles:nil];
+     [alertView show];
+     
+     }];*/
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{

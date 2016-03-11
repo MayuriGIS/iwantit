@@ -34,7 +34,6 @@
     
     seleImg = [[NSMutableArray alloc]initWithObjects:@"beacon_selbtn", @"wishlist_selbtn",@"appointment_selbtn",@"sho_selbtn",@"scan_selbtn",@"search_selbtn",@"logout_selbtn", nil];
     
-
     UIImageView *LogoIcon = [[UIImageView alloc]init];
     LogoIcon.image = [UIImage imageNamed:@"logo"];
     LogoIcon.frame = CGRectMake(0,8,80,80);
@@ -81,7 +80,7 @@
     iconView.backgroundColor = [UIColor whiteColor];
     
     if (selectedIndex == indexPath.row) {
-        if ( indexPath.row == 5) {
+        if ( indexPath.row == 6) {
             iconView.image = [UIImage imageNamed:[unSeleImg objectAtIndex:indexPath.row]];
         }else{
             iconView.image = [UIImage imageNamed:[seleImg objectAtIndex:indexPath.row]];

@@ -51,7 +51,7 @@
         }
     }else{
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Warning !"
-                                                                                 message:@"This feature is Currently Unavailable- Turn ON Location Services?"preferredStyle:UIAlertControllerStyleAlert];
+ message:@"This feature is Currently Unavailable- Turn ON Location Services?"preferredStyle:UIAlertControllerStyleAlert];
         
         UIAlertAction *actionOk = [UIAlertAction actionWithTitle:@"Settings" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
             BOOL canOpenSettings = (UIApplicationOpenSettingsURLString != NULL);
@@ -188,14 +188,14 @@
     switch (index) {
         case 0:
         {
-            [self userRegistrationAPI];
-
             [UIView animateWithDuration:0.35 animations:^{
                 self.visibleCardView.frame = CGRectMake(0, self.visibleCardView.frame.size.height, self.visibleCardView.frame.size.width, self.visibleCardView.frame.size.height);
             } completion:^(BOOL finished) {
                 [summaryCardView removeFromSuperview];
                 self.visibleCardView = nil;
             }];
+            [self userRegistrationAPI];
+
         }
             break;
         default:
