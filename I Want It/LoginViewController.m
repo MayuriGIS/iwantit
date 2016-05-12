@@ -47,6 +47,7 @@
 
     
     serverArr = [[NSMutableArray alloc]initWithObjects:
+                 @"http://ovcibm.ovcdemo.com:8080/",
                  @"http://mo-ovc-test.obnubilate.co.uk:8080/",
                  @"http://mo-ovc-demo.obnubilate.co.uk:8080/",
                  @"http://ovc-o2.ovcdemo.com:8080/",
@@ -114,7 +115,7 @@
     
     emailTxtfld = [[UITextField alloc]init];
     if ([[NSUserDefaults standardUserDefaults]stringForKey:@"userMail"] == nil) {
-        emailTxtfld.text = @"abhijit@oneviewcommerce.com";
+        emailTxtfld.text = @"";
     }else{
         emailTxtfld.text = [[NSUserDefaults standardUserDefaults]stringForKey:@"userMail"];
     }
@@ -145,7 +146,7 @@
     passTxtfld.backgroundColor = [UIColor clearColor];
     passTxtfld.delegate = self;
     passTxtfld.font = [UIFont fontWithName:@"OpenSans-Regular" size:16.0];
-    passTxtfld.text = @"123456";
+//    passTxtfld.text = @"123456";
     passTxtfld.secureTextEntry = YES;
     passTxtfld.textAlignment = NSTextAlignmentRight;
     passTxtfld.backgroundColor = [UIColor clearColor];

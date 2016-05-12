@@ -132,7 +132,7 @@
                 if (item.lastSeenBeacon.proximity == 1 || item.lastSeenBeacon.proximity == 2){
                     beconUID = [NSString stringWithFormat:@"%@", item.uuid.UUIDString];
                     [self forcetoStopMonitoring];
-                    NSDictionary *dict = @{@"title":@"Welcome to the “London - The Strand” Store",@"summary":@"An Associate is on the way to assist you.",@"image":@"o2image.jpg"};
+                    NSDictionary *dict = @{@"title":@"",@"summary":@"An Associate is on the way to assist you.",@"image":@"store.jpg"};
                     if(!self.visibleCardView) {
                         [self showSummaryCard:dict];
                     }

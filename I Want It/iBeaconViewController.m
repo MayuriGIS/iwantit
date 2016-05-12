@@ -163,7 +163,7 @@
         [delegate.beaconTimer invalidate];
         delegate.beaconTimer = nil;
         [ibeacon forcetoStopMonitoring];
-        NSDictionary *dict = @{@"title":@"Welcome to the “London - The Strand” Store",@"summary":@"An Associate is on the way to assist you.",@"image":@"o2image.jpg"};
+        NSDictionary *dict = @{@"title":@"",@"summary":@"An Associate is on the way to assist you.",@"image":@"store.jpg"};
         if(!self.visibleCardView) {
             [self performSelector:@selector(showSummaryCard:) withObject:dict afterDelay:1];
         }

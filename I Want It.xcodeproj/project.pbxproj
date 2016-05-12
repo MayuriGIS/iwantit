@@ -169,8 +169,6 @@
 		0D550FA01A5C391900C75319 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D550F9E1A5C391900C75319 /* Icon.png */; };
 		0D550FA11A5C391900C75319 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D550F9F1A5C391900C75319 /* Icon@2x.png */; };
 		895C34BB1C86CFC900ACA69C /* iBeaconViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 895C34BA1C86CFC900ACA69C /* iBeaconViewController.m */; };
-		895C34C41C86D37700ACA69C /* o2image.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 895C34BD1C86D37700ACA69C /* o2image.jpg */; };
-		895C34C51C86D37700ACA69C /* o2image1.png in Resources */ = {isa = PBXBuildFile; fileRef = 895C34BE1C86D37700ACA69C /* o2image1.png */; };
 		895C34C61C86D37700ACA69C /* RWTItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 895C34C01C86D37700ACA69C /* RWTItem.m */; };
 		895C34C71C86D37700ACA69C /* SummaryCardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 895C34C21C86D37700ACA69C /* SummaryCardView.m */; };
 		895C34C81C86D37700ACA69C /* SummaryCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 895C34C31C86D37700ACA69C /* SummaryCardView.xib */; };
@@ -184,6 +182,7 @@
 		899597AD1C89E07800F87D08 /* beacon_unselbtn.png in Resources */ = {isa = PBXBuildFile; fileRef = 899597A91C89E07800F87D08 /* beacon_unselbtn.png */; };
 		899597AE1C89E07800F87D08 /* beacon_unselbtn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 899597AA1C89E07800F87D08 /* beacon_unselbtn@2x.png */; };
 		89A934881C905BF700F16D15 /* BeconObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 89A934871C905BF700F16D15 /* BeconObject.m */; };
+		89E555A91CE4562A009A1B69 /* store.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 89E555A81CE4562A009A1B69 /* store.jpg */; };
 		BA4C6A14D13B2F3A7B512226 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E3B1F39B2B3F9C838763D055 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -368,8 +367,6 @@
 		0D550F9F1A5C391900C75319 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
 		895C34B91C86CFC900ACA69C /* iBeaconViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iBeaconViewController.h; sourceTree = "<group>"; };
 		895C34BA1C86CFC900ACA69C /* iBeaconViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iBeaconViewController.m; sourceTree = "<group>"; };
-		895C34BD1C86D37700ACA69C /* o2image.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = o2image.jpg; sourceTree = "<group>"; };
-		895C34BE1C86D37700ACA69C /* o2image1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = o2image1.png; sourceTree = "<group>"; };
 		895C34BF1C86D37700ACA69C /* RWTItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RWTItem.h; sourceTree = "<group>"; };
 		895C34C01C86D37700ACA69C /* RWTItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RWTItem.m; sourceTree = "<group>"; };
 		895C34C11C86D37700ACA69C /* SummaryCardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SummaryCardView.h; sourceTree = "<group>"; };
@@ -388,6 +385,7 @@
 		899597AA1C89E07800F87D08 /* beacon_unselbtn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "beacon_unselbtn@2x.png"; sourceTree = "<group>"; };
 		89A934861C905BF700F16D15 /* BeconObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BeconObject.h; sourceTree = "<group>"; };
 		89A934871C905BF700F16D15 /* BeconObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BeconObject.m; sourceTree = "<group>"; };
+		89E555A81CE4562A009A1B69 /* store.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = store.jpg; sourceTree = "<group>"; };
 		D5557F9057D1E05AA22B9A65 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		E3B1F39B2B3F9C838763D055 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		F90DDB0DA75BC6BC79AE1304 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
@@ -558,8 +556,7 @@
 		0949C79B1A5C31B1009E6666 /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				895C34BD1C86D37700ACA69C /* o2image.jpg */,
-				895C34BE1C86D37700ACA69C /* o2image1.png */,
+				89E555A81CE4562A009A1B69 /* store.jpg */,
 				899597A71C89E07800F87D08 /* beacon_selbtn.png */,
 				899597A81C89E07800F87D08 /* beacon_selbtn@2x.png */,
 				899597A91C89E07800F87D08 /* beacon_unselbtn.png */,
@@ -939,7 +936,6 @@
 				0949C7421A5C316F009E6666 /* cancel-icon.png in Resources */,
 				0949C7951A5C316F009E6666 /* swipe_btn@2x.png in Resources */,
 				0949C7411A5C316F009E6666 /* cameragrey_icon@2x.png in Resources */,
-				895C34C51C86D37700ACA69C /* o2image1.png in Resources */,
 				0949C7401A5C316F009E6666 /* cameragrey_icon.png in Resources */,
 				0949C73D1A5C316F009E6666 /* calendar_icon@2x.png in Resources */,
 				0949C7561A5C316F009E6666 /* radiobtn_selbtn@2x.png in Resources */,
@@ -953,7 +949,6 @@
 				0949C72A1A5C316F009E6666 /* Icon-Small.png in Resources */,
 				0949C7641A5C316F009E6666 /* IWI_splashscreen_750x1334.png in Resources */,
 				0949C7441A5C316F009E6666 /* chat_greybubble.png in Resources */,
-				895C34C41C86D37700ACA69C /* o2image.jpg in Resources */,
 				0949C71C1A5C316F009E6666 /* addminus_icon@2x.png in Resources */,
 				0949C7601A5C316F009E6666 /* IWI_logincorner.png in Resources */,
 				0949C7361A5C316F009E6666 /* back_icon.png in Resources */,
@@ -1013,6 +1008,7 @@
 				0949C74C1A5C316F009E6666 /* dropdown_arrow@2x.png in Resources */,
 				0949C72E1A5C316F009E6666 /* appbar_icon@2x.png in Resources */,
 				0949C77E1A5C316F009E6666 /* minus_icon@2x.png in Resources */,
+				89E555A91CE4562A009A1B69 /* store.jpg in Resources */,
 				0949C76D1A5C316F009E6666 /* up_sel.png in Resources */,
 				0949C7831A5C316F009E6666 /* scan_unselbtn.png in Resources */,
 				0949C7161A5C316F009E6666 /* addblackbar@2x.png in Resources */,
