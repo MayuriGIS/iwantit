@@ -47,13 +47,16 @@
     APIservice.delegate = self;
     APIservice.activityIndicator = activityIndicator;
     
-    ibeacon = [[BeconObject alloc]init];
-    ibeacon.mainView = self;
+//    ibeacon = [[BeconObject alloc]init];
+//    ibeacon.mainView = self;
     
-    if (delegate.beaconTimer == nil) {
-        [ibeacon beconInitialization];
-    }
+//    NSTimer *becon = [[singleBeacon sharedInstance] beaconTimer];
 
+    if (delegate.isFirst) {
+        [[singleBeacon sharedCenter] beconInitialization];
+        delegate.isFirst = NO;
+    }
+    
     sideMenuBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     sideMenuBtn.frame = CGRectMake(0,0,40,64);
     sideMenuBtn.contentEdgeInsets = UIEdgeInsetsMake(-20, -15, 0, 0);
@@ -449,9 +452,7 @@
         }else if (alertView.tag==300){
             
             if (buttonIndex==0) {
-                
                 [self productApi];
-                
             }
             
         }else{

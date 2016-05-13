@@ -103,7 +103,6 @@
     [tableView reloadData];
     
     if (indexPath.row==0) {
-        
         iBeaconViewController *searchObj = [[iBeaconViewController alloc] init];
        
         UINavigationController *navigationController = self.menuContainerViewController.centerViewController;
@@ -152,12 +151,15 @@
         [self.menuContainerViewController setMenuState:MFSideMenuStateClosed];
 
     }else{
-        BeconObject *ibeacon = [[BeconObject alloc]init];
-        [ibeacon forcetoStopMonitoring];
+       
+        [[NSUserDefaults standardUserDefaults]setBool:NO forKey:@"FirstTime"];
+        delegate.isFirst = NO;
+        [[singleBeacon sharedCenter]forcetoStopMonitoring];
+      
+//        BeconObject *ibeacon = [[BeconObject alloc]init];
+//        [ibeacon forcetoStopMonitoring];
         
         [delegate.dataBaseObj deleteAllTables];
-        [[NSUserDefaults standardUserDefaults]setBool:NO forKey:@"FirstTime"];
-        
         LoginViewController *logObj=[[LoginViewController alloc]init];
         UINavigationController *navigationController = self.menuContainerViewController.centerViewController;
         NSArray *controllers = [NSArray arrayWithObject:logObj];

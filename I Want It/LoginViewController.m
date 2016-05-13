@@ -38,7 +38,7 @@
     delegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     arrowFlag = NO;
     
-    activityIndicator = [[ActivityIndicatorController alloc] init];
+    activityIndicator = [[ActivityIndicatorController alloc]init];
     [activityIndicator initWithViewController:self.navigationController];
     
     APIservice = [[CommonWebServices alloc] init];
@@ -389,7 +389,7 @@
                     
                     [[NSUserDefaults standardUserDefaults] setObject:userDetail forKey:USERDETAIL];
                     [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"FirstTime"];
-                    
+                    delegate.isFirst = YES;                    
                     MyWishViewController *wishObj=[[MyWishViewController alloc]init];
                     [self.navigationController pushViewController:wishObj animated:NO];
                 }else{

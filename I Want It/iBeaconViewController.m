@@ -8,6 +8,7 @@
 
 #import "iBeaconViewController.h"
 #import "RWTItem.h"
+#import "singleBeacon.h"
 
 @interface iBeaconViewController ()
 
@@ -124,9 +125,9 @@
                 warnLbl.frame = CGRectMake(10,-100,300,80);
             }];
             
-            if (delegate.beaconTimer == nil) {
-                [ibeacon beconInitialization];
-            }
+//            if (delegate.beaconTimer == nil) {
+//                [ibeacon beconInitialization];
+//            }
         }
     }else{
         NSLog(@"Location Services Disabled");
@@ -160,10 +161,12 @@
 
 - (void) switchIsChanged:(UISwitch *)sender{
     if ([sender isOn]){
-        [delegate.beaconTimer invalidate];
-        delegate.beaconTimer = nil;
-        [ibeacon forcetoStopMonitoring];
-        NSDictionary *dict = @{@"title":@"",@"summary":@"An Associate is on the way to assist you.",@"image":@"store.jpg"};
+//        [delegate.beaconTimer invalidate];
+//        delegate.beaconTimer = nil;
+//        [ibeacon forcetoStopMonitoring];
+        [[singleBeacon sharedCenter]forcetoStopMonitoring];
+
+        NSDictionary *dict = @{@"title":@"Welcome",@"summary":@"An Associate is on the way to assist you.",@"image":@"store.jpg"};
         if(!self.visibleCardView) {
             [self performSelector:@selector(showSummaryCard:) withObject:dict afterDelay:1];
         }
@@ -205,10 +208,11 @@
         {
             [self.beconSwitch setOn:NO];
             [self userRegistrationAPI];
-            [delegate.beaconTimer invalidate];
-            delegate.beaconTimer = nil;
-
-            delegate.beaconTimer = [NSTimer  scheduledTimerWithTimeInterval:IDLETIMER target:ibeacon selector:@selector(beconInitialization) userInfo:nil repeats:NO];
+//            [delegate.beaconTimer invalidate];
+//            delegate.beaconTimer = nil;
+//
+//            delegate.beaconTimer = [NSTimer  scheduledTimerWithTimeInterval:IDLETIMER target:ibeacon selector:@selector(beconInitialization) userInfo:nil repeats:NO];
+            [[singleBeacon sharedCenter]restartMonitoring];
 
             [UIView animateWithDuration:0.35 animations:^{
                 self.visibleCardView.frame = CGRectMake(0, self.visibleCardView.frame.size.height, self.visibleCardView.frame.size.width, self.visibleCardView.frame.size.height);

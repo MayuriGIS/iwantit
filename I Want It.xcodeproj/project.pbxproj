@@ -168,6 +168,7 @@
 		0949C7D11A5C342B009E6666 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0949C7D01A5C342B009E6666 /* AVFoundation.framework */; };
 		0D550FA01A5C391900C75319 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D550F9E1A5C391900C75319 /* Icon.png */; };
 		0D550FA11A5C391900C75319 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0D550F9F1A5C391900C75319 /* Icon@2x.png */; };
+		5155E8F71CE5EFAF009A0546 /* singleBeacon.m in Sources */ = {isa = PBXBuildFile; fileRef = 5155E8F61CE5EFAF009A0546 /* singleBeacon.m */; };
 		895C34BB1C86CFC900ACA69C /* iBeaconViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 895C34BA1C86CFC900ACA69C /* iBeaconViewController.m */; };
 		895C34C61C86D37700ACA69C /* RWTItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 895C34C01C86D37700ACA69C /* RWTItem.m */; };
 		895C34C71C86D37700ACA69C /* SummaryCardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 895C34C21C86D37700ACA69C /* SummaryCardView.m */; };
@@ -365,6 +366,8 @@
 		0949C7D01A5C342B009E6666 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		0D550F9E1A5C391900C75319 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		0D550F9F1A5C391900C75319 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
+		5155E8F51CE5EFAF009A0546 /* singleBeacon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = singleBeacon.h; sourceTree = "<group>"; };
+		5155E8F61CE5EFAF009A0546 /* singleBeacon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = singleBeacon.m; sourceTree = "<group>"; };
 		895C34B91C86CFC900ACA69C /* iBeaconViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iBeaconViewController.h; sourceTree = "<group>"; };
 		895C34BA1C86CFC900ACA69C /* iBeaconViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iBeaconViewController.m; sourceTree = "<group>"; };
 		895C34BF1C86D37700ACA69C /* RWTItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RWTItem.h; sourceTree = "<group>"; };
@@ -775,6 +778,8 @@
 		0D710FD91A5CF91D00B87EBA /* AppDelegate */ = {
 			isa = PBXGroup;
 			children = (
+				5155E8F51CE5EFAF009A0546 /* singleBeacon.h */,
+				5155E8F61CE5EFAF009A0546 /* singleBeacon.m */,
 				0949C61F1A5C2FA8009E6666 /* AppDelegate.h */,
 				0949C6201A5C2FA8009E6666 /* AppDelegate.m */,
 			);
@@ -1108,6 +1113,7 @@
 				0949C7B91A5C336E009E6666 /* SideOptionViewController.m in Sources */,
 				0949C7B01A5C336E009E6666 /* AddOptionViewController.m in Sources */,
 				0949C7471A5C316F009E6666 /* ChatScreen.m in Sources */,
+				5155E8F71CE5EFAF009A0546 /* singleBeacon.m in Sources */,
 				0949C7B71A5C336E009E6666 /* ScanViewController.m in Sources */,
 				0949C7B21A5C336E009E6666 /* AppointDetailViewController.m in Sources */,
 				0949C7B61A5C336E009E6666 /* ProductViewController.m in Sources */,
@@ -1222,8 +1228,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Kalyana Sundaram (Z6FV3MW5L9)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Kalyana Sundaram (Z6FV3MW5L9)";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "I Want It/I Want It-Prefix.pch";
@@ -1231,9 +1237,9 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				ONLY_ACTIVE_ARCH = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = com.greatinnovus.ovcapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.oneviewcommerce.IWantIt;
 				PRODUCT_NAME = "I Want It";
-				PROVISIONING_PROFILE = "c1448b54-611e-437a-bf1b-4c5a73b8db1d";
+				PROVISIONING_PROFILE = "";
 				VALID_ARCHS = "armv7 armv7s arm64";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1245,17 +1251,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Kalyana Sundaram (Z6FV3MW5L9)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Kalyana Sundaram (Z6FV3MW5L9)";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "I Want It/I Want It-Prefix.pch";
 				INFOPLIST_FILE = "I Want It/I Want It-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = com.greatinnovus.ovcapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.oneviewcommerce.IWantIt;
 				PRODUCT_NAME = "I Want It";
-				PROVISIONING_PROFILE = "c1448b54-611e-437a-bf1b-4c5a73b8db1d";
+				PROVISIONING_PROFILE = "";
 				VALID_ARCHS = "armv7 armv7s arm64";
 				WRAPPER_EXTENSION = app;
 			};

@@ -12,7 +12,7 @@
 #import "LoginViewController.h"
 
 @implementation AppDelegate
-@synthesize userInfoArr,selectedIndex,dataBaseObj,productDict,productId,itemIdxId,proAmount,popUpEnable,isNetConnected, beaconTimer, beaconArray;
+@synthesize userInfoArr,selectedIndex,dataBaseObj,productDict,productId,itemIdxId,proAmount,popUpEnable,isNetConnected, beaconArray, isFirst;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -42,6 +42,7 @@
     productId = @"";
     itemIdxId = @"";
     proAmount = @"";
+    isFirst = YES;
     
     dataBaseObj = [[DataBaseClass alloc] init];
     [dataBaseObj createDatabase];
@@ -133,8 +134,6 @@
 
 
 - (void)configuration{
-    // Configuration of Beacons
-    
   /*// GIS Beacons
     NSArray *beaconArr = @[@{@"UUID":@"F94DBB23-2266-7822-3782-57BEAC0952AC",
                              @"name":@"0117C55415A3",
@@ -146,8 +145,8 @@
                              @"minor":@"60335"},
                            @{@"UUID":@"F94DBB23-2266-7822-3782-57BEAC0952AC",
                              @"name":@"0117C559E19A",
-                             @"major":@"14743",
-                             @"minor":@"60335"}];
+                             @"major":@"22166",
+                             @"minor":@"49926"}];
     */
      // OVC Beacons
      NSArray *beaconArr = @[@{@"UUID":@"B9407F30-F5F8-466E-AFF9-25556B57FE6D",

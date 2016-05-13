@@ -1,21 +1,37 @@
 //
-//  BeconObject.m
+//  singleBeacon.m
 //  I Want It
 //
-//  Created by macmini01 on 09/03/16.
+//  Created by macmini01 on 13/05/16.
 //  Copyright © 2016 Great Innovus Solutions. All rights reserved.
 //
 
-#import "BeconObject.h"
+#import "singleBeacon.h"
 
-@implementation BeconObject
+@implementation singleBeacon
+static singleBeacon *sharedAwardCenter = nil;    // static instance variable
+
++ (singleBeacon *)sharedCenter {
+    if (sharedAwardCenter == nil) {
+        sharedAwardCenter = [[super allocWithZone:NULL] init];
+    }
+    return sharedAwardCenter;
+}
+
+- (id)init {
+    if ( (self = [super init]) ) {
+        _beaconTimer = [NSTimer    scheduledTimerWithTimeInterval:IDLETIMER target:self selector:@selector(beconInitialization) userInfo:nil repeats:NO];
+    }
+    return self;
+}
+
+
 
 -(void)beconInitialization{
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
-
+    
     APIservice = [[CommonWebServices alloc] init];
-
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(LocationManagerAction)
                                                  name:@"LocationNotification"
@@ -45,13 +61,13 @@
             [alertController addAction:actionOk];
             [alertController addAction:actionCancel];
             [self.mainView presentViewController:alertController animated:YES completion:nil];
-
+            
         }else{
             [self restartMonitoring];
         }
     }else{
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Warning !"
- message:@"This feature is Currently Unavailable- Turn ON Location Services?"preferredStyle:UIAlertControllerStyleAlert];
+                                                                                 message:@"This feature is Currently Unavailable- Turn ON Location Services?"preferredStyle:UIAlertControllerStyleAlert];
         
         UIAlertAction *actionOk = [UIAlertAction actionWithTitle:@"Settings" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action){
             BOOL canOpenSettings = (UIApplicationOpenSettingsURLString != NULL);
@@ -73,8 +89,8 @@
 
 -(void)restartMonitoring{
     AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-//    [delegate.beaconTimer invalidate];
-//    delegate.beaconTimer = nil;
+    [_beaconTimer invalidate];
+    _beaconTimer = nil;
     
     for (RWTItem *obj in delegate.beaconArray) {
         [self startMonitoringItem:obj];
@@ -83,8 +99,8 @@
 
 -(void)forcetoStopMonitoring{
     AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-//    [delegate.beaconTimer invalidate];
-//    delegate.beaconTimer = nil;
+    [_beaconTimer invalidate];
+     _beaconTimer = nil;
     [self.locationManager stopUpdatingLocation];
     for (RWTItem *obj in delegate.beaconArray) {
         [self stopMonitoringItem:obj];
@@ -124,7 +140,7 @@
         didRangeBeacons:(NSArray *)beacons
                inRegion:(CLBeaconRegion *)region{
     AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-
+    
     for (CLBeacon *beacon in beacons) {
         for (RWTItem *item in delegate.beaconArray) {
             if ([item isEqualToCLBeacon:beacon]) {
@@ -132,7 +148,7 @@
                 if (item.lastSeenBeacon.proximity == 1 || item.lastSeenBeacon.proximity == 2){
                     beconUID = [NSString stringWithFormat:@"%@", item.uuid.UUIDString];
                     [self forcetoStopMonitoring];
-                    NSDictionary *dict = @{@"title":@"",@"summary":@"An Associate is on the way to assist you.",@"image":@"store.jpg"};
+                    NSDictionary *dict = @{@"title":@"Welcome",@"summary":@"An Associate is on the way to assist you.",@"image":@"store.jpg"};
                     if(!self.visibleCardView) {
                         [self showSummaryCard:dict];
                     }
@@ -182,9 +198,7 @@
 #pragma Mark - Okay Button Action
 - (void)summaryButtonClickedAtIndex:(int)index
 {
-    AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-//    delegate.beaconTimer = [NSTimer    scheduledTimerWithTimeInterval:IDLETIMER target:self selector:@selector(LocationManagerAction) userInfo:nil repeats:NO];
-
+    
     switch (index) {
         case 0:
         {
@@ -194,9 +208,12 @@
                 [summaryCardView removeFromSuperview];
                 self.visibleCardView = nil;
             }];
-            [self userRegistrationAPI];
+            if ([[NSUserDefaults standardUserDefaults]boolForKey:@"FirstTime"]) {
+                _beaconTimer = [NSTimer    scheduledTimerWithTimeInterval:IDLETIMER target:self selector:@selector(LocationManagerAction) userInfo:nil repeats:NO];
+                [self userRegistrationAPI];
+            }
         }
-    break;
+            break;
         default:
             break;
     }
@@ -233,4 +250,12 @@
 }
 
 
+
+
+- (void)customMethod {
+    // implement your custom code here
+}
+
 @end
+
+

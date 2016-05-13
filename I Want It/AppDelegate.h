@@ -20,8 +20,7 @@
 @property (nonatomic, strong) NSMutableArray *userInfoArr, *beaconArray;
 @property (nonatomic, strong) NSMutableDictionary *productDict;
 @property (nonatomic) int selectedIndex;
-@property (nonatomic) BOOL isNetConnected, popUpEnable;
+@property (nonatomic) BOOL isNetConnected, popUpEnable, isFirst;
 @property (strong, nonatomic) CLLocationManager *locationManager;
-@property (strong, nonatomic) NSTimer *beaconTimer;
 
 @end
