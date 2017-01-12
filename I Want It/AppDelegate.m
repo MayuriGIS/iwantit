@@ -134,7 +134,8 @@
 
 
 - (void)configuration{
-  /*// GIS Beacons
+    /*
+  // GIS Beacons
     NSArray *beaconArr = @[@{@"UUID":@"F94DBB23-2266-7822-3782-57BEAC0952AC",
                              @"name":@"0117C55415A3",
                              @"major":@"57813",
@@ -148,6 +149,7 @@
                              @"major":@"22166",
                              @"minor":@"49926"}];
     */
+    
      // OVC Beacons
      NSArray *beaconArr = @[@{@"UUID":@"B9407F30-F5F8-466E-AFF9-25556B57FE6D",
                               @"name":@"mint",
@@ -160,7 +162,15 @@
                             @{@"UUID":@"B9407F30-F5F8-466E-AFF9-25556B57FE6D",
                               @"name":@"blueberry",
                               @"major":@"40841",
-                              @"minor":@"45724"}];
+                              @"minor":@"45724"},
+                            @{@"UUID":@"B9407F30-F5F8-466E-AFF9-25556B57FE6D",
+                              @"name":@"blueberry",
+                              @"major":@"54548",
+                              @"minor":@"13911"},
+                            @{@"UUID":@"B9407F30-F5F8-466E-AFF9-25556B57FE6D",
+                              @"name":@"ice",
+                              @"major":@"62190",
+                              @"minor":@"43774"}];
     
     for (NSDictionary *dict in beaconArr) {
         NSUUID *uuid = [[NSUUID alloc] initWithUUIDString:[dict objectForKey:@"UUID"]];
