@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11201" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="NO">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <development version="7000" identifier="xcode"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
-        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SummaryCardView"/>
@@ -14,23 +14,27 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="rHT-2L-tN0">
-                <frame key="frameInset"/>
+                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iN0-l3-epB">
+                        <rect key="frame" x="10" y="84" width="300" height="400"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title of the summary card!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ene-Vr-Iu7">
+                                <rect key="frame" x="10" y="10" width="280" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="7yv-nb-RA9"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
-                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sez-xl-gqs">
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <rect key="frame" x="5" y="357" width="290" height="1"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Your Summary Text goes here" translatesAutoresizingMaskIntoConstraints="NO" id="NaE-aK-xdu">
+                                <rect key="frame" x="15" y="237" width="270" height="114"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="294" id="6i6-cZ-SWU"/>
                                     <constraint firstAttribute="height" constant="114" id="Emg-gv-mSy"/>
@@ -38,7 +42,7 @@
                                     <constraint firstAttribute="height" constant="294" id="i21-c2-Ghc"/>
                                     <constraint firstAttribute="width" constant="176" id="yJG-hF-ICR"/>
                                 </constraints>
-                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                 <variation key="default">
@@ -51,7 +55,8 @@
                                 </variation>
                             </textView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="8Tl-tx-C4g">
-                                <color key="backgroundColor" red="0.95532482862113322" green="0.93732238910520171" blue="0.95686274509803915" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <rect key="frame" x="15" y="64" width="270" height="164"/>
+                                <color key="backgroundColor" red="0.95532482862113322" green="0.93732238910520171" blue="0.95686274509803915" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="100" id="VeA-mX-Kwm"/>
                                     <constraint firstAttribute="width" secondItem="8Tl-tx-C4g" secondAttribute="height" multiplier="22:17" id="Vgm-nZ-T4F"/>
@@ -70,14 +75,15 @@
                                 </variation>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OIY-TJ-eXN">
+                                <rect key="frame" x="0.0" y="359" width="300" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="121" id="8hU-G5-UsU"/>
                                     <constraint firstAttribute="height" constant="40" id="vc0-FJ-K4a"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                 <state key="normal" title="OK">
-                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    <color key="titleShadowColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                                 <variation key="default">
                                     <mask key="constraints">
@@ -89,7 +95,7 @@
                                 </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" red="0.39130795140000002" green="0.61327456290000004" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="0.39130795140000002" green="0.61327456290000004" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="Ene-Vr-Iu7" firstAttribute="centerX" secondItem="8Tl-tx-C4g" secondAttribute="centerX" id="0gS-23-poC"/>
                             <constraint firstItem="Ene-Vr-Iu7" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="10" id="2yC-Uw-YDP"/>
@@ -153,13 +159,6 @@
                             <mask key="constraints">
                                 <exclude reference="FGT-fJ-gwc"/>
                                 <exclude reference="iRs-A5-oyX"/>
-                                <exclude reference="Hse-pB-ly1"/>
-                                <exclude reference="KUT-7c-3xf"/>
-                                <exclude reference="KuU-al-tXQ"/>
-                                <exclude reference="P6N-jf-18Q"/>
-                                <exclude reference="RcN-VF-SQ4"/>
-                                <exclude reference="lzu-rO-bNF"/>
-                                <exclude reference="mSf-ed-rNm"/>
                                 <exclude reference="5gm-QE-dXC"/>
                                 <exclude reference="Esn-dl-Scy"/>
                                 <exclude reference="HX9-am-Esx"/>
@@ -174,6 +173,13 @@
                                 <exclude reference="bjC-S4-fBD"/>
                                 <exclude reference="egi-xv-tD9"/>
                                 <exclude reference="occ-Ep-lSt"/>
+                                <exclude reference="Hse-pB-ly1"/>
+                                <exclude reference="KUT-7c-3xf"/>
+                                <exclude reference="KuU-al-tXQ"/>
+                                <exclude reference="P6N-jf-18Q"/>
+                                <exclude reference="RcN-VF-SQ4"/>
+                                <exclude reference="lzu-rO-bNF"/>
+                                <exclude reference="mSf-ed-rNm"/>
                                 <exclude reference="4L4-1V-T8u"/>
                                 <exclude reference="Efo-cB-LYb"/>
                                 <exclude reference="H6q-dG-wTb"/>
