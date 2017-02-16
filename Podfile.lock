@@ -1,29 +1,29 @@
 PODS:
   - HPGrowingTextView (1.1)
-  - MBProgressHUD (1.0.0)
+  - MBProgressHUD (0.9.2)
   - MFSideMenu (0.5.5)
   - MTBBarcodeScanner (1.9.1)
   - Reachability (3.2)
-  - SDWebImage (4.0.0):
-    - SDWebImage/Core (= 4.0.0)
-  - SDWebImage/Core (4.0.0)
+  - SDWebImage (3.8.2):
+    - SDWebImage/Core (= 3.8.2)
+  - SDWebImage/Core (3.8.2)
 
 DEPENDENCIES:
   - HPGrowingTextView (~> 1.1)
-  - MBProgressHUD (~> 1.0)
+  - MBProgressHUD (~> 0.9)
   - MFSideMenu (~> 0.5)
   - MTBBarcodeScanner (~> 1.9)
   - Reachability (~> 3.2)
-  - SDWebImage (~> 4.0)
+  - SDWebImage (~> 3.7)
 
 SPEC CHECKSUMS:
   HPGrowingTextView: 88a716d97fb853bcb08a4a08e4727da17efc9b19
-  MBProgressHUD: 4890f671c94e8a0f3cf959aa731e9de2f036d71a
+  MBProgressHUD: 1569cf7ace17a8bac47aabfbb8580a49690386d1
   MFSideMenu: 268122e6894f2747fc3a2b48578100b232506c60
   MTBBarcodeScanner: d65037ab37f0932b46e11a51e98978593424d64e
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
-  SDWebImage: 76a6348bdc74eb5a55dd08a091ef298e56b55e41
+  SDWebImage: 098e97e6176540799c27e804c96653ee0833d13c
 
-PODFILE CHECKSUM: 7180ed338b3ce8118a74c0da74131730a6d577d1
+PODFILE CHECKSUM: 32780cbd643d53bf6c32c764087857cc6191844e
 
 COCOAPODS: 1.2.0
