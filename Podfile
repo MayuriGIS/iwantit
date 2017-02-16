@@ -6,7 +6,7 @@ target 'I Want It' do
   # use_frameworks!
 
   # Pods for I Want It
-pod 'MBProgressHUD', '~> 1.0'
+pod 'MBProgressHUD', '~> 0.9'
 pod 'MTBBarcodeScanner', '~> 1.9'
 pod 'MFSideMenu', '~> 0.5'
 pod 'HPGrowingTextView', '~> 1.1'
